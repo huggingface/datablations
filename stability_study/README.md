@@ -2,7 +2,7 @@
 
 ## Issue
 
-Sampo found that the same training scripts, with the same setups, converge on puhti (V100 / cuda) but diverge on LUMI (MI250X / ROCm)
+Sampo found that the same training scripts (reused from BigScience), with the same setups, converge on puhti (V100 / cuda) but diverge on LUMI (MI250X / ROCm). Loss eventually always blows up, even after going down to as low as 3. We're searching for an element that's different between CUDA and ROCm environments that could explain the malfunction.
 
 ![lumivspuhti](assets/lumivspuhti.png)
 
