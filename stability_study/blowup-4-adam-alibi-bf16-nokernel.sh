@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=blowup-5-adam
+#SBATCH --job-name=blowup-4-adam-alibi-bf16-nokernel
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=40
@@ -82,7 +82,11 @@ GPT_ARGS=" \
     --init-method-std 0.0048 \
     --position-embedding-type alibi \
     --embed-layernorm \
-    --fp16 \
+    --bf16 \
+    --checkpoint-activations \
+    --no-masked-softmax-fusion \
+    --no-bias-gelu-fusion \
+    --no-bias-dropout-fusion \
     $OPTIMIZER_ARGS \
     "
 
@@ -111,7 +115,7 @@ cat <<EOF > $DS_CONFIG_PATH
     "zero_optimization": {
         "stage": $ZERO_STAGE
     },
-    "fp16": {
+    "bf16": {
         "enabled": true,
 	"loss_scale": 0,
 	"loss_scale_window": 500,
@@ -128,10 +132,11 @@ DEEPSPEED_ARGS=" \
     --deepspeed \
     --deepspeed_config $DS_CONFIG_PATH \
     --zero-stage $ZERO_STAGE \
+    --deepspeed-activation-checkpointing \
     "
 
 CMD=" \
-    Megatron-DeepSpeed/pretrain_gpt.py \
+    noua-meg-ds/pretrain_gpt.py \
     --tensor-model-parallel-size $TP_SIZE \
     --pipeline-model-parallel-size $PP_SIZE \
     $GPT_ARGS \

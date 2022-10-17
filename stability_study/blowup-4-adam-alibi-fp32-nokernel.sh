@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=blowup-3-adam-nokernel-2
+#SBATCH --job-name=blowup-4-adam-alibi-fp32-nokernel
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=40
@@ -23,7 +23,7 @@ fi
 
 set -euo pipefail
 
-CHECKPOINT_PATH=checkpoints
+CHECKPOINT_PATH=checkpoints/$SLURM_JOB_ID
 TENSORBOARD_PATH=/project/project_462000119/nouatazi/lumi_logs/tensorboard/$SLURM_JOB_NAME/$SLURM_JOB_ID
 # Start from scratch
 rm -rf "$CHECKPOINT_PATH"
@@ -49,12 +49,13 @@ SEQ_LEN=2048
 
 SAVE_INTERVAL=1500
 
+# taken from https://github.com/bigscience-workshop/bigscience/blob/master/train/tr11-176B-ml/smaller_models/tr11e-350M-ml.slurm
 OPTIMIZER_ARGS=" \
     --optimizer adam \
     --adam-beta1 0.9 \
-    --adam-beta2 0.999 \
+    --adam-beta2 0.95 \
     --adam-eps 1e-8 \
-    --lr 2e-4 \
+    --lr 3.0e-4 \
     --min-lr 1e-5 \
     --lr-decay-style cosine \
     --lr-decay-samples 73_242_187 \
@@ -78,7 +79,9 @@ GPT_ARGS=" \
     --merge-file $MERGE_FILE \
     --loss-scale 0 \
     --clip-grad 1.0 \
-    --fp16 \
+    --init-method-std 0.0048 \
+    --position-embedding-type alibi \
+    --embed-layernorm \
     --checkpoint-activations \
     --no-masked-softmax-fusion \
     --no-bias-gelu-fusion \
@@ -112,7 +115,7 @@ cat <<EOF > $DS_CONFIG_PATH
         "stage": $ZERO_STAGE
     },
     "fp16": {
-        "enabled": true,
+        "enabled": false,
 	"loss_scale": 0,
 	"loss_scale_window": 500,
 	"hysteresis": 2,
