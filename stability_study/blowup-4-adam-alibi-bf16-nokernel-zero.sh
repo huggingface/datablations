@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=blowup-4-alibi-bf16
+#SBATCH --job-name=blowup-4-adam-alibi-bf16-nokernel-zero
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=40
@@ -84,6 +84,9 @@ GPT_ARGS=" \
     --embed-layernorm \
     --bf16 \
     --checkpoint-activations \
+    --no-masked-softmax-fusion \
+    --no-bias-gelu-fusion \
+    --no-bias-dropout-fusion \
     $OPTIMIZER_ARGS \
     "
 
@@ -99,7 +102,7 @@ OUTPUT_ARGS=" \
     --log-validation-ppl-to-tensorboard \
     "
 
-ZERO_STAGE=0
+ZERO_STAGE=1
 
 mkdir -p ds_configs
 DS_CONFIG_PATH="ds_configs/$SLURM_JOB_ID.json"
@@ -133,7 +136,7 @@ DEEPSPEED_ARGS=" \
     "
 
 CMD=" \
-    Megatron-DeepSpeed-orig/pretrain_gpt.py \
+    noua-meg-ds/pretrain_gpt.py \
     --tensor-model-parallel-size $TP_SIZE \
     --pipeline-model-parallel-size $PP_SIZE \
     $GPT_ARGS \

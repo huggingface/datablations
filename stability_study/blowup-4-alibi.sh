@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=blowup-4-alibi-bf16
+#SBATCH --job-name=blowup-4-alibi
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=40
@@ -82,7 +82,7 @@ GPT_ARGS=" \
     --init-method-std 0.0048 \
     --position-embedding-type alibi \
     --embed-layernorm \
-    --bf16 \
+    --fp16 \
     --checkpoint-activations \
     $OPTIMIZER_ARGS \
     "
@@ -112,7 +112,7 @@ cat <<EOF > $DS_CONFIG_PATH
     "zero_optimization": {
         "stage": $ZERO_STAGE
     },
-    "bf16": {
+    "fp16": {
         "enabled": true,
 	"loss_scale": 0,
 	"loss_scale_window": 500,

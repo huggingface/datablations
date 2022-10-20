@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=blowup-4-adam-alibi-fp32
+#SBATCH --job-name=blowup-4-alibi-fp32
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=40
@@ -132,7 +132,7 @@ DEEPSPEED_ARGS=" \
     "
 
 CMD=" \
-    Megatron-DeepSpeed/pretrain_gpt.py \
+    Megatron-DeepSpeed-orig/pretrain_gpt.py \
     --tensor-model-parallel-size $TP_SIZE \
     --pipeline-model-parallel-size $PP_SIZE \
     $GPT_ARGS \

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=blowup-4-alibi-bf16
+#SBATCH --job-name=blowup-4-alibi-nods-lm
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=40
@@ -80,9 +80,7 @@ GPT_ARGS=" \
     --loss-scale 0 \
     --clip-grad 1.0 \
     --init-method-std 0.0048 \
-    --position-embedding-type alibi \
-    --embed-layernorm \
-    --bf16 \
+    --fp16 \
     --checkpoint-activations \
     $OPTIMIZER_ARGS \
     "
@@ -101,39 +99,8 @@ OUTPUT_ARGS=" \
 
 ZERO_STAGE=0
 
-mkdir -p ds_configs
-DS_CONFIG_PATH="ds_configs/$SLURM_JOB_ID.json"
-
-cat <<EOF > $DS_CONFIG_PATH
-{
-    "train_micro_batch_size_per_gpu": $MICRO_BATCH_SIZE,
-    "train_batch_size": $GLOBAL_BATCH_SIZE,
-    "gradient_clipping": 1.0,
-    "zero_optimization": {
-        "stage": $ZERO_STAGE
-    },
-    "bf16": {
-        "enabled": true,
-	"loss_scale": 0,
-	"loss_scale_window": 500,
-	"hysteresis": 2,
-	"min_loss_scale": 1,
-	"initial_scale_power": 12
-    },
-    "steps_per_print": 2000,
-    "wall_clock_breakdown": false
-}
-EOF
-
-DEEPSPEED_ARGS=" \
-    --deepspeed \
-    --deepspeed_config $DS_CONFIG_PATH \
-    --zero-stage $ZERO_STAGE \
-    --deepspeed-activation-checkpointing \
-    "
-
 CMD=" \
-    Megatron-DeepSpeed-orig/pretrain_gpt.py \
+    Megatron-LM/pretrain_gpt.py \
     --tensor-model-parallel-size $TP_SIZE \
     --pipeline-model-parallel-size $PP_SIZE \
     $GPT_ARGS \
@@ -143,7 +110,6 @@ CMD=" \
     --data-path $DATA_PATH \
     --data-impl mmap \
     --split 949,50,1 \
-     $DEEPSPEED_ARGS \
     "
 
 echo $CMD
