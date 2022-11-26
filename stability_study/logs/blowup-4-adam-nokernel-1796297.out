@@ -1,0 +1,1369 @@
+noua-meg-ds/pretrain_gpt.py --tensor-model-parallel-size 1 --pipeline-model-parallel-size 1 --num-layers 24 --hidden-size 1024 --num-attention-heads 16 --ffn-hidden-size 4096 --seq-length 2048 --max-position-embeddings 2048 --micro-batch-size 16 --global-batch-size 512 --rampup-batch-size 128 128 2_000_000 --train-samples 73_242_187 --vocab-file /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-vocab.json --merge-file /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-merges.txt --loss-scale 0 --clip-grad 1.0 --init-method-std 0.0048 --position-embedding-type alibi --embed-layernorm --fp16 --no-masked-softmax-fusion --checkpoint-activations --optimizer adam --adam-beta1 0.9 --adam-beta2 0.95 --adam-eps 1e-8 --lr 3.0e-4 --min-lr 1e-5 --lr-decay-style cosine --lr-decay-samples 73_242_187 --lr-warmup-samples 183_105 --clip-grad 1.0 --weight-decay 1e-1 --log-interval 200 --save-interval 1500 --eval-interval 100 --eval-iters 100 --tensorboard-dir /project/project_462000119/nouatazi/lumi_logs/tensorboard/blowup-4-adam-nokernel/1796297 --tensorboard-queue-size 5 --log-timers-to-tensorboard --log-batch-size-to-tensorboard --log-validation-ppl-to-tensorboard --save checkpoints/1796297 --load checkpoints/1796297 --data-path /project/project_462000119/nouatazi/datablations/stability_study/data/owt2 --data-impl mmap --split 949,50,1 --deepspeed --deepspeed_config ds_configs/1796297.json --zero-stage 0 --deepspeed-activation-checkpointing
+START 1796297: Sun 16 Oct 2022 01:28:38 PM EEST
+0: Launching on nid005054 (0/1), master nid005054 port 9999, GPUs 8, CUDA: True
+0: using world size: 8, data-parallel-size: 8, tensor-model-parallel size: 1, pipeline-model-parallel size: 1 
+0: using torch.float16 for parameters ...
+0: ------------------------ arguments ------------------------
+0:   abort_on_unmet_fused_kernel_constraints ......... False
+0:   accumulate_allreduce_grads_in_fp32 .............. False
+0:   adam_beta1 ...................................... 0.9
+0:   adam_beta2 ...................................... 0.95
+0:   adam_eps ........................................ 1e-08
+0:   adlr_autoresume ................................. False
+0:   adlr_autoresume_interval ........................ 1000
+0:   apply_query_key_layer_scaling ................... True
+0:   apply_residual_connection_post_layernorm ........ False
+0:   attention_dropout ............................... 0.1
+0:   attention_softmax_in_fp32 ....................... False
+0:   bert_binary_head ................................ True
+0:   bert_load ....................................... None
+0:   bf16 ............................................ False
+0:   bias_dropout_fusion ............................. True
+0:   bias_gelu_fusion ................................ True
+0:   biencoder_projection_dim ........................ 0
+0:   biencoder_shared_query_context_model ............ False
+0:   block_data_path ................................. None
+0:   checkpoint_activations .......................... True
+0:   checkpoint_in_cpu ............................... False
+0:   checkpoint_num_layers ........................... 1
+0:   clip_grad ....................................... 1.0
+0:   codecarbon_dir .................................. None
+0:   consumed_train_samples .......................... 0
+0:   consumed_train_tokens ........................... 0
+0:   consumed_valid_samples .......................... 0
+0:   contigious_checkpointing ........................ False
+0:   cpu_optimizer ................................... False
+0:   cpu_torch_adam .................................. False
+0:   curriculum_learning ............................. False
+0:   data_impl ....................................... mmap
+0:   data_parallel_size .............................. 8
+0:   data_path ....................................... ['/project/project_462000119/nouatazi/datablations/stability_study/data/owt2']
+0:   dataloader_type ................................. single
+0:   DDP_impl ........................................ local
+0:   decoder_seq_length .............................. None
+0:   deepscale ....................................... False
+0:   deepscale_config ................................ None
+0:   deepspeed ....................................... True
+0:   deepspeed_activation_checkpointing .............. True
+0:   deepspeed_config ................................ ds_configs/1796297.json
+0:   deepspeed_mpi ................................... False
+0:   distribute_checkpointed_activations ............. False
+0:   distributed_backend ............................. nccl
+0:   embed_layernorm ................................. True
+0:   embedding_path .................................. None
+0:   encoder_seq_length .............................. 2048
+0:   eod_mask_loss ................................... False
+0:   eval_interval ................................... 100
+0:   eval_iters ...................................... 100
+0:   eval_only ....................................... None
+0:   evidence_data_path .............................. None
+0:   exit_duration_in_mins ........................... None
+0:   exit_interval ................................... None
+0:   ffn_hidden_size ................................. 4096
+0:   finetune ........................................ False
+0:   fp16 ............................................ True
+0:   fp16_lm_cross_entropy ........................... False
+0:   fp32_residual_connection ........................ False
+0:   gigaflos_no_embeds .............................. 0
+0:   global_batch_size ............................... 512
+0:   glu_activation .................................. None
+0:   hidden_dropout .................................. 0.1
+0:   hidden_size ..................................... 1024
+0:   hysteresis ...................................... 2
+0:   ict_head_size ................................... None
+0:   ict_load ........................................ None
+0:   img_dim ......................................... 224
+0:   indexer_batch_size .............................. 128
+0:   indexer_log_interval ............................ 1000
+0:   inference ....................................... False
+0:   init_method_std ................................. 0.0048
+0:   init_method_xavier_uniform ...................... False
+0:   initial_loss_scale .............................. 4294967296
+0:   kill_switch_path ................................ None
+0:   kv_channels ..................................... 64
+0:   layernorm_epsilon ............................... 1e-05
+0:   lazy_mpu_init ................................... None
+0:   load ............................................ checkpoints/1796297
+0:   local_rank ...................................... None
+0:   log_batch_size_to_tensorboard ................... True
+0:   log_interval .................................... 200
+0:   log_learning_rate_to_tensorboard ................ True
+0:   log_level ....................................... None
+0:   log_level_replica ............................... None
+0:   log_loss_scale_to_tensorboard ................... True
+0:   log_num_zeros_in_grad ........................... False
+0:   log_params_norm ................................. False
+0:   log_path ........................................ None
+0:   log_timers_to_tensorboard ....................... True
+0:   log_validation_ppl_to_tensorboard ............... True
+0:   loss_on_targets_only ............................ False
+0:   loss_scale ...................................... 0.0
+0:   loss_scale_window ............................... 1000
+0:   lr .............................................. 0.0003
+0:   lr_decay_iters .................................. None
+0:   lr_decay_samples ................................ 73242187
+0:   lr_decay_style .................................. cosine
+0:   lr_decay_tokens ................................. None
+0:   lr_warmup_fraction .............................. None
+0:   lr_warmup_iters ................................. 0
+0:   lr_warmup_samples ............................... 183105
+0:   make_vocab_size_divisible_by .................... 128
+0:   mask_prob ....................................... 0.15
+0:   masked_softmax_fusion ........................... False
+0:   max_position_embeddings ......................... 2048
+0:   mean_noise_span_length .......................... None
+0:   memory_centric_tiled_linear ..................... False
+0:   merge_file ...................................... /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-merges.txt
+0:   micro_batch_size ................................ 16
+0:   min_loss_scale .................................. 1.0
+0:   min_lr .......................................... 1e-05
+0:   mmap_warmup ..................................... False
+0:   no_load_optim ................................... None
+0:   no_load_rng ..................................... None
+0:   no_save_optim ................................... None
+0:   no_save_rng ..................................... None
+0:   noise_density ................................... None
+0:   num_attention_heads ............................. 16
+0:   num_channels .................................... 3
+0:   num_classes ..................................... 1000
+0:   num_layers ...................................... 24
+0:   num_layers_per_virtual_pipeline_stage ........... None
+0:   num_workers ..................................... 2
+0:   onnx_safe ....................................... None
+0:   openai_gelu ..................................... False
+0:   optimizer ....................................... adam
+0:   override_lr_scheduler ........................... False
+0:   pad_vocab_size_to ............................... None
+0:   params_dtype .................................... torch.float16
+0:   partition_activations ........................... False
+0:   patch_dim ....................................... 16
+0:   pipeline_model_parallel_size .................... 1
+0:   position_embedding_type ......................... PositionEmbeddingType.alibi
+0:   pp_partition_method ............................. None
+0:   profile_backward ................................ False
+0:   query_in_block_prob ............................. 0.1
+0:   rampup_batch_size ............................... ['128', '128', '2_000_000']
+0:   rank ............................................ 0
+0:   remote_device ................................... none
+0:   reset_attention_mask ............................ False
+0:   reset_position_ids .............................. False
+0:   retriever_report_topk_accuracies ................ []
+0:   retriever_score_scaling ......................... False
+0:   retriever_seq_length ............................ 256
+0:   reweight_loss_based_on_position_frequency ....... False
+0:   sample_rate ..................................... 1.0
+0:   save ............................................ checkpoints/1796297
+0:   save_interval ................................... 1500
+0:   scatter_gather_tensors_in_pipeline .............. True
+0:   scattered_embeddings ............................ False
+0:   seed ............................................ 1234
+0:   seq_length ...................................... 2048
+0:   sgd_momentum .................................... 0.9
+0:   short_seq_prob .................................. 0.1
+0:   skip_train_iteration_range ...................... None
+0:   split ........................................... 949,50,1
+0:   split_transformers .............................. False
+0:   sync_tp_duplicated_parameters ................... False
+0:   synchronize_each_layer .......................... False
+0:   tensor_model_parallel_size ...................... 1
+0:   tensorboard_dir ................................. /project/project_462000119/nouatazi/lumi_logs/tensorboard/blowup-4-adam-nokernel/1796297
+0:   tensorboard_log_interval ........................ 1
+0:   tensorboard_queue_size .......................... 5
+0:   test_weighted_split_names ....................... None
+0:   test_weighted_split_paths ....................... None
+0:   test_weighted_split_paths_path .................. None
+0:   test_weighted_split_splits ...................... None
+0:   test_weighted_split_weights ..................... None
+0:   tile_factor ..................................... 1
+0:   titles_data_path ................................ None
+0:   tokenizer_name_or_path .......................... None
+0:   tokenizer_type .................................. GPT2BPETokenizer
+0:   train_iters ..................................... None
+0:   train_samples ................................... 73242187
+0:   train_tokens .................................... None
+0:   train_weighted_split_paths ...................... None
+0:   train_weighted_split_paths_path ................. None
+0:   universal_checkpoint ............................ False
+0:   use_bnb_optimizer ............................... False
+0:   use_checkpoint_lr_scheduler ..................... False
+0:   use_contiguous_buffers_in_ddp ................... False
+0:   use_cpu_initialization .......................... None
+0:   use_one_sent_docs ............................... False
+0:   use_pin_memory .................................. False
+0:   valid_num_workers ............................... 2
+0:   valid_weighted_split_names ...................... None
+0:   valid_weighted_split_paths ...................... None
+0:   valid_weighted_split_paths_path ................. None
+0:   valid_weighted_split_splits ..................... None
+0:   valid_weighted_split_weights .................... None
+0:   virtual_pipeline_model_parallel_size ............ None
+0:   vocab_extra_ids ................................. 0
+0:   vocab_file ...................................... /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-vocab.json
+0:   weight_decay .................................... 0.1
+0:   world_size ...................................... 8
+0:   zero_allgather_bucket_size ...................... 0.0
+0:   zero_contigious_gradients ....................... False
+0:   zero_reduce_bucket_size ......................... 0.0
+0:   zero_reduce_scatter ............................. False
+0:   zero_stage ...................................... 0
+0: -------------------- end of arguments ---------------------
+0: will use batch size rampup starting from global batch size 128 to global batch size 512 with batch size increments 128 over 2000000 samples.
+0: > building GPT2BPETokenizer tokenizer ...
+0:  > padded vocab (size: 50257) with 47 dummy tokens (new size: 50304)
+0: DeepSpeed general environment info:
+0: torch install path ............... ['/pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch']
+0: torch version .................... 1.12.1+rocm5.1.1
+0: torch cuda version ............... None
+0: torch hip version ................ 5.1.20531-cacfa990
+0: nvcc version ..................... None
+0: deepspeed install path ........... ['/pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/deepspeed']
+0: deepspeed info ................... 0.7.2, unknown, unknown
+0: deepspeed wheel compiled w. ...... torch 1.12, hip 5.1
+0: **** Git info for Megatron: git_hash=unknown git_branch=unknown ****
+0: > initializing torch distributed ...
+0: [2022-10-16 13:29:54,808] [INFO] [comm.py:633:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+0: > setting tensorboard ...
+0: > initializing tensor model parallel with size 1
+0: > initializing pipeline model parallel with size 1
+0: > setting random seeds to 1234 ...
+0: [2022-10-16 13:29:57,585] [INFO] [checkpointing.py:226:model_parallel_cuda_manual_seed] > initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...> WARNING: fused kernels are not used ...
+0: 
+0: > WARNING: fused kernels are not used ...> compiling dataset index builder ...
+0: 
+0: make: Entering directory '/pfs/lustrep4/projappl/project_462000119/nouatazi/noua-meg-ds/megatron/data'
+0: make: Nothing to be done for 'default'.
+0: make: Leaving directory '/pfs/lustrep4/projappl/project_462000119/nouatazi/noua-meg-ds/megatron/data'
+0: >>> done with dataset index builder. Compilation time: 0.039 seconds
+0: > WARNING: fused kernels are not used ...
+0: time to initialize megatron (seconds): 43.811
+0: [after megatron is initialized] datetime: 2022-10-16 13:30:03 
+0: building GPT model ...
+0: [2022-10-16 13:30:03,855] [INFO] [utils.py:827:see_memory_usage] Before Building Model
+0: [2022-10-16 13:30:03,857] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+0: [2022-10-16 13:30:03,857] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 43.57 GB, percent = 8.7%
+0: SEED_LAYERS=False BASE_SEED=1234 SEED_FN=None
+0: Using topology: {ProcessCoord(pipe=0, data=0, model=0): 0, ProcessCoord(pipe=0, data=1, model=0): 1, ProcessCoord(pipe=0, data=2, model=0): 2, ProcessCoord(pipe=0, data=3, model=0): 3, ProcessCoord(pipe=0, data=4, model=0): 4, ProcessCoord(pipe=0, data=5, model=0): 5, ProcessCoord(pipe=0, data=6, model=0): 6, ProcessCoord(pipe=0, data=7, model=0): 7}
+0: [2022-10-16 13:30:04,118] [INFO] [module.py:366:_partition_layers] Partitioning pipeline stages with method type:transformer
+0: stage=0 layers=31
+0:      0: _to_float16
+0:      1: EmbeddingPipe
+0:      2: <lambda>
+0:      3: ParallelTransformerLayerPipe
+0:      4: ParallelTransformerLayerPipe
+0:      5: ParallelTransformerLayerPipe
+0:      6: ParallelTransformerLayerPipe
+0:      7: ParallelTransformerLayerPipe
+0:      8: ParallelTransformerLayerPipe
+0:      9: ParallelTransformerLayerPipe
+0:     10: ParallelTransformerLayerPipe
+0:     11: ParallelTransformerLayerPipe
+0:     12: ParallelTransformerLayerPipe
+0:     13: ParallelTransformerLayerPipe
+0:     14: ParallelTransformerLayerPipe
+0:     15: ParallelTransformerLayerPipe
+0:     16: ParallelTransformerLayerPipe
+0:     17: ParallelTransformerLayerPipe
+0:     18: ParallelTransformerLayerPipe
+0:     19: ParallelTransformerLayerPipe
+0:     20: ParallelTransformerLayerPipe
+0:     21: ParallelTransformerLayerPipe
+0:     22: ParallelTransformerLayerPipe
+0:     23: ParallelTransformerLayerPipe
+0:     24: ParallelTransformerLayerPipe
+0:     25: ParallelTransformerLayerPipe
+0:     26: ParallelTransformerLayerPipe
+0:     27: undo
+0:     28: MixedFusedLayerNorm
+0:     29: EmbeddingPipe
+0:     30: float16_to_fp32
+0:   loss: CrossEntropy
+0: [2022-10-16 13:30:07,110] [INFO] [utils.py:827:see_memory_usage] After Building Model
+0: [2022-10-16 13:30:07,110] [INFO] [utils.py:828:see_memory_usage] MA 0.68 GB         Max_MA 0.68 GB         CA 0.73 GB         Max_CA 1 GB 
+0: [2022-10-16 13:30:07,111] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 44.48 GB, percent = 8.8%
+0: setting training iterations to 148693
+0: > learning rate decay style: cosine
+0: DeepSpeed is enabled.
+0: [2022-10-16 13:30:07,122] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed info: version=0.7.2, git-hash=unknown, git-branch=unknown
+0: [2022-10-16 13:30:07,205] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+0: [2022-10-16 13:30:07,205] [INFO] [logging.py:68:log_dist] [Rank 0] Removing param_group that has no 'params' in the client Optimizer
+0: [2022-10-16 13:30:07,205] [INFO] [logging.py:68:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+0: [2022-10-16 13:30:07,216] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed Basic Optimizer = {basic_optimizer.__class__.__name__}
+0: [2022-10-16 13:30:07,216] [INFO] [logging.py:68:log_dist] [Rank 0] Creating fp16 unfused optimizer with dynamic loss scale
+0: [2022-10-16 13:30:07,216] [INFO] [unfused_optimizer.py:41:__init__] Fused Lamb Legacy : False 
+0: [2022-10-16 13:30:08,899] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed Final Optimizer = Adam
+0: [2022-10-16 13:30:08,899] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+0: [2022-10-16 13:30:08,899] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.learning_rates.AnnealingLR object at 0x15102e36c670>
+0: [2022-10-16 13:30:08,900] [INFO] [logging.py:68:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95), (0.9, 0.95)]
+0: [2022-10-16 13:30:08,900] [INFO] [config.py:987:print] DeepSpeedEngine configuration:
+0: [2022-10-16 13:30:08,900] [INFO] [config.py:991:print]   activation_checkpointing_config  {
+0:     "partition_activations": false, 
+0:     "contiguous_memory_optimization": false, 
+0:     "cpu_checkpointing": false, 
+0:     "number_checkpoints": null, 
+0:     "synchronize_checkpoint_boundary": false, 
+0:     "profile": false
+0: }
+0: [2022-10-16 13:30:08,900] [INFO] [config.py:991:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+0: [2022-10-16 13:30:08,900] [INFO] [config.py:991:print]   amp_enabled .................. False
+0: [2022-10-16 13:30:08,900] [INFO] [config.py:991:print]   amp_params ................... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   autotuning_config ............ {
+0:     "enabled": false, 
+0:     "start_step": null, 
+0:     "end_step": null, 
+0:     "metric_path": null, 
+0:     "arg_mappings": null, 
+0:     "metric": "throughput", 
+0:     "model_info": null, 
+0:     "results_dir": null, 
+0:     "exps_dir": null, 
+0:     "overwrite": true, 
+0:     "fast": true, 
+0:     "start_profile_step": 3, 
+0:     "end_profile_step": 5, 
+0:     "tuner_type": "gridsearch", 
+0:     "tuner_early_stopping": 5, 
+0:     "tuner_num_trials": 50, 
+0:     "model_info_path": null, 
+0:     "mp_size": 1, 
+0:     "max_train_batch_size": null, 
+0:     "min_train_batch_size": 1, 
+0:     "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+0:     "min_train_micro_batch_size_per_gpu": 1, 
+0:     "num_tuning_micro_batch_sizes": 3
+0: }
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   bfloat16_enabled ............. False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   checkpoint_tag_validation_enabled  True
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   checkpoint_tag_validation_fail  False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x15102d2f18e0>
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   communication_data_type ...... None
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_par
+0: ameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   curriculum_enabled ........... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   curriculum_params ............ False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   dataloader_drop_last ......... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   disable_allgather ............ False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   dump_state ................... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   dynamic_loss_scale_args ...... {'init_scale': 4096, 'scale_window': 500, 'delayed_shift': 2, 'min_scale': 1}
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_enabled ........... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_gas_boundary_resolution  1
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_layer_name ........ bert.encoder.layer
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_layer_num ......... 0
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_max_iter .......... 100
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_stability ......... 1e-06
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_tol ............... 0.01
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   eigenvalue_verbose ........... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   elasticity_enabled ........... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   flops_profiler_config ........ {
+0:     "enabled": false, 
+0:     "profile_step": 1, 
+0:     "module_depth": -1, 
+0:     "top_modules": 1, 
+0:     "detailed": true, 
+0:     "output_file": null
+0: }
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   fp16_auto_cast ............... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   fp16_enabled ................. True
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   fp16_master_weights_and_gradients  False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   global_rank .................. 0
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   gradient_accumulation_steps .. 4
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   gradient_clipping ............ 1.0
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   gradient_predivide_factor .... 1.0
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   initial_dynamic_scale ........ 4096
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   load_universal_checkpoint .... False
+0: [2022-10-16 13:30:08,901] [INFO] [config.py:991:print]   loss_scale ................... 0
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   memory_breakdown ............. False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   monitor_config ............... <deepspeed.monitor.config.DeepSpeedMonitorConfig object at 0x15102d2f1820>
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   nebula_config ................ {
+0:     "enabled": false, 
+0:     "persistent_storage_path": null, 
+0:     "persistent_time_interval": 100, 
+0:     "num_of_version_in_retention": 2, 
+0:     "enable_nebula_load": true, 
+0:     "load_path": null
+0: }
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   optimizer_legacy_fusion ...... False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   optimizer_name ............... None
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   optimizer_params ............. None
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0}
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   pld_enabled .................. False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   pld_params ................... False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   prescale_gradients ........... False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   scheduler_name ............... None
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   scheduler_params ............. None
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   sparse_attention ............. None
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   sparse_gradients_enabled ..... False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   steps_per_print .............. 2000
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   train_batch_size ............. 512
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   train_micro_batch_size_per_gpu  16
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   wall_clock_breakdown ......... False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   world_size ................... 8
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   zero_allow_untested_optimizer  False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   zero_config .................. stage=0 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500000000 allgather_partitions=True allgather_bucket_size=500000000 overlap_comm=False load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1000000000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50000000 param_persistence_threshold=100000 model_persistence_threshold=9223372036854775807 max_live_parameters=1000000000 max_reuse_distance=1000000000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   zero_enabled ................. False
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:991:print]   zero_optimization_stage ...... 0
+0: [2022-10-16 13:30:08,902] [INFO] [config.py:976:print_user_config]   json = {
+0:     "train_micro_batch_size_per_gpu": 16, 
+0:     "train_batch_size": 512, 
+0:     "gradient_clipping": 1.0, 
+0:     "zero_optimization": {
+0:         "stage": 0
+0:     }, 
+0:     "fp16": {
+0:         "enabled": true, 
+0:         "loss_scale": 0, 
+0:         "loss_scale_window": 500, 
+0:         "hysteresis": 2, 
+0:         "min_loss_scale": 1, 
+0:         "initial_scale_power": 12
+0:     }, 
+0:     "steps_per_print": 2.000000e+03, 
+0:     "wall_clock_breakdown": false
+0: }
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: 
+0: 
+0: 
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Emitting ninja build file /tmp/nouatazi/torch_extensions/utils/build.ninja...
+0: Building extension module utils...
+0: Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+0: ninja: no work to do.
+0: Loading extension module utils...
+0: Time to load utils op: 0.16008734703063965 seconds
+0: Loading extension module utils...Loading extension module utils...Loading extension module utils...Loading extension module utils...Loading extension module utils...
+0: 
+0: 
+0: 
+0: Loading extension module utils...
+0: 
+0: Loading extension module utils...
+0: Time to load utils op: 0.22092485427856445 secondsTime to load utils op: 0.22093915939331055 seconds
+0: 
+0: Time to load utils op: 0.22092914581298828 secondsTime to load utils op: 0.22093772888183594 seconds
+0: Time to load utils op: 0.22093844413757324 secondsTime to load utils op: 0.22092962265014648 seconds
+0: 
+0: 
+0: Time to load utils op: 0.22099018096923828 seconds
+0: [2022-10-16 13:30:09,154] [INFO] [engine.py:87:__init__] CONFIG: micro_batches=4 micro_batch_size=16
+0: [2022-10-16 13:30:09,165] [INFO] [engine.py:145:__init__] RANK=0 STAGE=0 LAYERS=31 [0, 31) STAGE_PARAMS=353824768 (353.825M) TOTAL_PARAMS=353824768 (353.825M) UNIQUE_PARAMS=353824768 (353.825M)
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: WARNING: could not find the metadata file checkpoints/1796297 
+0:     will not load any checkpoints and will start from random
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-16 13:30:09,169] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1796297/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: time (ms) | load-checkpoint: 0.56
+0: estimated model parameters: 0.353824768
+0: estimated model parameters without embeddings: 0.302313472
+0: [after model, optimizer, and learning rate scheduler are built] datetime: 2022-10-16 13:30:09 
+0: > building train, validation, and test datasets ...
+0:  > datasets target sizes (minimum size):
+0:     train:      73242187
+0:     validation: 76134400
+0:     test:       51200
+0: > building train, validation, and test datasets for GPT ...
+0:  > building dataset index ...
+0:     reading sizes...
+0:     reading pointers...
+0:     reading document index...
+0:     creating numpy buffer of mmap...
+0:     creating memory view of numpy buffer...
+0:  > finished creating indexed dataset in 0.081077 seconds
+0:     number of documents: 17103059
+0:  > dataset split:
+0:     train:
+0:      document indices in [0, 16230803) total of 16230803 documents
+0:     validation:
+0:      document indices in [16230803, 17085956) total of 855153 documents
+0:     test:
+0:      document indices in [17085956, 17103059) total of 17103 documents
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.267 seconds
+0:     total number of samples: 75778606
+0:     total number of epochs: 10
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.115 seconds
+0:     total number of samples: 76299323
+0:     total number of epochs: 178
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.075 seconds
+0:     total number of samples: 51511
+0:     total number of epochs: 6
+0: > finished creating GPT datasets ...
+0: [after dataloaders are built] datetime: 2022-10-16 13:30:13 
+0: done with setup ...
+0: training ...
+0: Number of parameters: [tensor rank - pipeline rank] w/ and w/o embeddings:
+0: time (ms) | model-and-optimizer-setup: 6116.39 | train/valid/test-data-iterators-setup: 3060.73
+0: [000-000] 0.3538B / 0.3023B
+0: [before the start of training step] datetime: 2022-10-16 13:30:13 
+0: [2022-10-16 13:30:15,240] [INFO] [checkpointing.py:547:forward] Activation Checkpointing Information
+0: [2022-10-16 13:30:15,240] [INFO] [checkpointing.py:548:forward] ----Partition Activations False, CPU CHECKPOINTING False
+0: [2022-10-16 13:30:15,240] [INFO] [checkpointing.py:551:forward] ----contiguous Memory Checkpointing False with 24 total layers
+0: [2022-10-16 13:30:15,240] [INFO] [checkpointing.py:554:forward] ----Synchronization False
+0: [2022-10-16 13:30:15,240] [INFO] [checkpointing.py:555:forward] ----Profiling time in checkpointing False
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 100 | lm loss value: 1.044194E+01 | lm loss PPL: 3.426701E+04 | 
+0: -----------------------------------------------------------------------------------------
+0: [Rank 0] (after 200 iterations) memory (MB) | allocated: 11044.94873046875 | max allocated: 29689.96923828125 | reserved: 46260.0 | max reserved: 46260.0
+0:  iteration      200/  148693 | consumed samples:        25600 | consumed tokens:     52428800 | elapsed time per iteration (s): 7.26 | learning rate: 4.194E-05 | global batch size:   128 | lm loss: 1.024627E+01 | loss scale: 4096.0 | grad norm: 8855.858 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 17.630 | TFLOPs: 15.93 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 200 | lm loss value: 9.122377E+00 | lm loss PPL: 9.157948E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 300 | lm loss value: 8.055754E+00 | lm loss PPL: 3.151878E+03 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      400/  148693 | consumed samples:        51200 | consumed tokens:    104857600 | elapsed time per iteration (s): 7.96 | learning rate: 8.389E-05 | global batch size:   128 | lm loss: 8.136972E+00 | loss scale: 4096.0 | grad norm: 1818.094 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.083 | TFLOPs: 14.54 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 400 | lm loss value: 7.899914E+00 | lm loss PPL: 2.697051E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 500 | lm loss value: 7.808501E+00 | lm loss PPL: 2.461437E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0: [2022-10-16 14:37:11,769] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096 to 8192.0
+0:  iteration      600/  148693 | consumed samples:        76800 | consumed tokens:    157286400 | elapsed time per iteration (s): 7.94 | learning rate: 1.258E-04 | global batch size:   128 | lm loss: 7.766328E+00 | loss scale: 8192.0 | grad norm: 5821.418 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.128 | TFLOPs: 14.58 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 600 | lm loss value: 7.809752E+00 | lm loss PPL: 2.464519E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 700 | lm loss value: 7.781517E+00 | lm loss PPL: 2.395906E+03 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      800/  148693 | consumed samples:       102400 | consumed tokens:    209715200 | elapsed time per iteration (s): 7.91 | learning rate: 1.678E-04 | global batch size:   128 | lm loss: 7.718306E+00 | loss scale: 8192.0 | grad norm: 3667.081 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.190 | TFLOPs: 14.63 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 800 | lm loss value: 7.774023E+00 | lm loss PPL: 2.378019E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 900 | lm loss value: 7.737727E+00 | lm loss PPL: 2.293253E+03 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration     1000/  148693 | consumed samples:       128000 | consumed tokens:    262144000 | elapsed time per iteration (s): 7.91 | learning rate: 2.097E-04 | global batch size:   128 | lm loss: 7.670718E+00 | loss scale: 8192.0 | grad norm: 3904.622 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.184 | TFLOPs: 14.63 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1000 | lm loss value: 7.703355E+00 | lm loss PPL: 2.215770E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,577] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,578] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-16 15:43:07,581] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 15:43:07,581] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1100 | lm loss value: 7.686144E+00 | lm loss PPL: 2.177961E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     1200/  148693 | consumed samples:       153600 | consumed tokens:    314572800 | elapsed time per iteration (s): 7.92 | learning rate: 2.517E-04 | global batch size:   128 | lm loss: 7.650797E+00 | loss scale: 16384.0 | grad norm: 7592.997 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.164 | TFLOPs: 14.61 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1200 | lm loss value: 7.667457E+00 | lm loss PPL: 2.137639E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1300 | lm loss value: 7.649559E+00 | lm loss PPL: 2.099719E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     1400/  148693 | consumed samples:       179200 | consumed tokens:    367001600 | elapsed time per iteration (s): 7.92 | learning rate: 2.936E-04 | global batch size:   128 | lm loss: 7.586019E+00 | loss scale: 16384.0 | grad norm: 7552.471 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.158 | TFLOPs: 14.60 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1400 | lm loss value: 7.624802E+00 | lm loss PPL: 2.048374E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1500 | lm loss value: 7.593582E+00 | lm loss PPL: 1.985413E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: saving checkpoint at iteration    1500 to checkpoints/1796297
+0: [2022-10-16 16:49:00,790] [INFO] [logging.py:68:log_dist] [Rank 0] [Torch] Checkpoint global_step1500 is begin to save!
+0: [2022-10-16 16:49:03,105] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,105] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,105] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,105] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,105] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,105] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,106] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0: [2022-10-16 16:49:03,107] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_01-model_00-model_states.pt...
+0: [2022-10-16 16:49:03,861] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_01-model_00-model_states.pt.
+0: [2022-10-16 16:49:03,861] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_03-model_00-model_states.pt...
+0: [2022-10-16 16:49:03,949] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_03-model_00-model_states.pt.
+0: [2022-10-16 16:49:03,950] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_04-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,042] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_04-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,042] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_05-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,152] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_05-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,153] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_06-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,213] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_06-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,213] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_07-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,302] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_07-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,302] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_08-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,417] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_08-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,417] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_09-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,471] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_09-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,472] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_10-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,535] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_10-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,536] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_11-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,662] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_11-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,662] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_12-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,730] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_12-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,730] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_13-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,807] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_13-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,807] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_14-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,920] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_14-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,920] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_15-model_00-model_states.pt...
+0: [2022-10-16 16:49:04,948] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_15-model_00-model_states.pt.
+0: [2022-10-16 16:49:04,948] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_16-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,029] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_16-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,030] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_17-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,106] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_17-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,107] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_18-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,135] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_18-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,135] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_19-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,265] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_19-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,266] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_20-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,354] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_20-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,355] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_21-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,428] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_21-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,428] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_22-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,574] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_22-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,575] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_23-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,669] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_23-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,669] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_24-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,770] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_24-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,770] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_25-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,871] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_25-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,871] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_26-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,945] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_26-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,945] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/layer_28-model_00-model_states.pt...
+0: [2022-10-16 16:49:05,947] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/layer_28-model_00-model_states.pt.
+0: [2022-10-16 16:49:05,948] [INFO] [logging.py:68:log_dist] [Rank 0] Saving model checkpoint: checkpoints/1796297/global_step1500/mp_rank_00_model_states.pt
+0: [2022-10-16 16:49:05,948] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step1500/mp_rank_00_model_states.pt...
+0: [2022-10-16 16:49:10,168] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step1500/mp_rank_00_model_states.pt.
+0: [2022-10-16 16:49:10,168] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step1500 is ready now!
+0:   successfully saved checkpoint at iteration    1500 to checkpoints/1796297
+0: time (ms) | save-checkpoint: 9534.46
+0: [2022-10-16 16:49:16,305] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,305] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,306] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 16:49:16,308] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 16:49:16,308] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0:  iteration     1600/  148693 | consumed samples:       204800 | consumed tokens:    419430400 | elapsed time per iteration (s): 7.97 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.550013E+00 | loss scale: 32768.0 | grad norm: 15208.126 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.064 | TFLOPs: 14.52 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1600 | lm loss value: 7.566221E+00 | lm loss PPL: 1.931827E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 1638
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 17:06:22,873] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1700 | lm loss value: 7.533646E+00 | lm loss PPL: 1.869911E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     1800/  148693 | consumed samples:       230400 | consumed tokens:    471859200 | elapsed time per iteration (s): 7.91 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.488877E+00 | loss scale: 16384.0 | grad norm: 7980.435 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.177 | TFLOPs: 14.62 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1800 | lm loss value: 7.513871E+00 | lm loss PPL: 1.833296E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1900 | lm loss value: 7.491017E+00 | lm loss PPL: 1.791874E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 17:52:16,503] [INFO] [logging.py:68:log_dist] [Rank 0] step=2000, skipped=1, lr=[0.0002999992901641709, 0.0002999992901641709, 0.0002999992901641709], mom=[(0.9, 0.95), (0.9, 0.95), (0.9, 0.95)]
+0: steps: 2000 loss: 7.4213 iter time (s): 6.205 samples/sec: 20.628
+0:  iteration     2000/  148693 | consumed samples:       256000 | consumed tokens:    524288000 | elapsed time per iteration (s): 7.93 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.446913E+00 | loss scale: 16384.0 | grad norm: 7829.800 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.151 | TFLOPs: 14.60 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2000 | lm loss value: 7.474563E+00 | lm loss PPL: 1.762631E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2100 | lm loss value: 7.446793E+00 | lm loss PPL: 1.714357E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 18:12:32,221] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,221] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,221] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,222] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0: [2022-10-16 18:12:32,224] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 18:12:32,224] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 16384.0 to 32768.0
+0:  iteration     2200/  148693 | consumed samples:       281600 | consumed tokens:    576716800 | elapsed time per iteration (s): 7.94 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.405041E+00 | loss scale: 32768.0 | grad norm: 18108.903 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.127 | TFLOPs: 14.58 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2200 | lm loss value: 7.436781E+00 | lm loss PPL: 1.697278E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2300 | lm loss value: 7.412674E+00 | lm loss PPL: 1.656851E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2400/  148693 | consumed samples:       307200 | consumed tokens:    629145600 | elapsed time per iteration (s): 7.93 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.382504E+00 | loss scale: 32768.0 | grad norm: 19352.420 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.147 | TFLOPs: 14.59 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2400 | lm loss value: 7.393629E+00 | lm loss PPL: 1.625594E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2500 | lm loss value: 7.379172E+00 | lm loss PPL: 1.602263E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2600/  148693 | consumed samples:       332800 | consumed tokens:    681574400 | elapsed time per iteration (s): 7.92 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.349824E+00 | loss scale: 32768.0 | grad norm: 20159.841 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.160 | TFLOPs: 14.60 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2600 | lm loss value: 7.360912E+00 | lm loss PPL: 1.573270E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,763] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,765] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,765] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,766] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,766] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:18:33,766] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 19:18:33,766] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 2666
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 19:21:21,120] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2700 | lm loss value: 7.344751E+00 | lm loss PPL: 1.548049E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2800/  148693 | consumed samples:       358400 | consumed tokens:    734003200 | elapsed time per iteration (s): 7.92 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.314753E+00 | loss scale: 32768.0 | grad norm: 18703.194 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.165 | TFLOPs: 14.61 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2800 | lm loss value: 7.325813E+00 | lm loss PPL: 1.519009E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2900 | lm loss value: 7.331206E+00 | lm loss PPL: 1.527223E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     3000/  148693 | consumed samples:       384000 | consumed tokens:    786432000 | elapsed time per iteration (s): 7.93 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.286604E+00 | loss scale: 32768.0 | grad norm: 19150.356 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.132 | TFLOPs: 14.58 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3000 | lm loss value: 7.296871E+00 | lm loss PPL: 1.475675E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: saving checkpoint at iteration    3000 to checkpoints/1796297
+0: [2022-10-16 20:07:18,220] [INFO] [logging.py:68:log_dist] [Rank 0] [Torch] Checkpoint global_step3000 is begin to save!
+0: [2022-10-16 20:07:18,351] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,352] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,352] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,352] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,352] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,352] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,352] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0: [2022-10-16 20:07:18,353] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_01-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,163] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_01-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,164] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_03-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,223] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_03-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,224] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_04-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,320] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_04-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,321] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_05-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,415] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_05-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,416] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_06-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,487] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_06-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,487] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_07-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,560] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_07-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,560] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_08-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,627] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_08-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,628] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_09-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,766] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_09-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,766] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_10-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,795] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_10-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,795] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_11-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,869] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_11-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,869] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_12-model_00-model_states.pt...
+0: [2022-10-16 20:07:19,995] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_12-model_00-model_states.pt.
+0: [2022-10-16 20:07:19,995] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_13-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,024] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_13-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,024] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_14-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,139] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_14-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,139] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_15-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,212] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_15-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,213] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_16-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,308] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_16-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,309] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_17-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,400] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_17-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,400] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_18-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,485] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_18-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,485] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_19-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,563] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_19-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,563] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_20-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,652] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_20-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,653] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_21-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,732] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_21-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,732] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_22-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,799] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_22-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,800] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_23-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,868] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_23-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,868] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_24-model_00-model_states.pt...
+0: [2022-10-16 20:07:20,941] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_24-model_00-model_states.pt.
+0: [2022-10-16 20:07:20,941] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_25-model_00-model_states.pt...
+0: [2022-10-16 20:07:21,055] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_25-model_00-model_states.pt.
+0: [2022-10-16 20:07:21,055] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_26-model_00-model_states.pt...
+0: [2022-10-16 20:07:21,182] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_26-model_00-model_states.pt.
+0: [2022-10-16 20:07:21,182] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/layer_28-model_00-model_states.pt...
+0: [2022-10-16 20:07:21,184] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/layer_28-model_00-model_states.pt.
+0: [2022-10-16 20:07:21,185] [INFO] [logging.py:68:log_dist] [Rank 0] Saving model checkpoint: checkpoints/1796297/global_step3000/mp_rank_00_model_states.pt
+0: [2022-10-16 20:07:21,185] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step3000/mp_rank_00_model_states.pt...
+0: [2022-10-16 20:07:25,386] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step3000/mp_rank_00_model_states.pt.
+0: [2022-10-16 20:07:25,386] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step3000 is ready now!
+0:   successfully saved checkpoint at iteration    3000 to checkpoints/1796297
+0: time (ms) | save-checkpoint: 7260.45
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3100 | lm loss value: 7.288693E+00 | lm loss PPL: 1.463656E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 20:27:39,281] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,281] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,281] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,281] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,282] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,282] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,282] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,282] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,283] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,283] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,283] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,283] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,284] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,284] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0: [2022-10-16 20:27:39,285] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 20:27:39,285] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 32768.0 to 65536.0
+0:  iteration     3200/  148693 | consumed samples:       409600 | consumed tokens:    838860800 | elapsed time per iteration (s): 7.97 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.262010E+00 | loss scale: 65536.0 | grad norm: 64061.417 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.063 | TFLOPs: 14.52 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3200 | lm loss value: 7.277115E+00 | lm loss PPL: 1.446808E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3203
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,348] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 65536.0 to 32768.0
+0: [2022-10-16 20:34:15,349] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: [2022-10-16 20:34:15,349] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 65536.0, reducing to 32768.0
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3300 | lm loss value: 7.244905E+00 | lm loss PPL: 1.400949E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3314
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 32768.0 to 16384.0
+0: [2022-10-16 20:48:36,631] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 32768.0, reducing to 16384.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,757] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3382
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-16 20:55:37,758] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0:  iteration     3400/  148693 | consumed samples:       435200 | consumed tokens:    891289600 | elapsed time per iteration (s): 7.93 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.197568E+00 | loss scale: 8192.0 | grad norm: 7785.027 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.151 | TFLOPs: 14.60 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3400 | lm loss value: 7.196435E+00 | lm loss PPL: 1.334664E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3500 | lm loss value: 7.178457E+00 | lm loss PPL: 1.310884E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     3600/  148693 | consumed samples:       460800 | consumed tokens:    943718400 | elapsed time per iteration (s): 7.92 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.161864E+00 | loss scale: 8192.0 | grad norm: 7404.178 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.167 | TFLOPs: 14.61 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3600 | lm loss value: 7.181720E+00 | lm loss PPL: 1.315169E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3700 | lm loss value: 7.161186E+00 | lm loss PPL: 1.288438E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,011] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 3783
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-16 21:48:29,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0:  iteration     3800/  148693 | consumed samples:       486400 | consumed tokens:    996147200 | elapsed time per iteration (s): 7.91 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.155251E+00 | loss scale: 4096.0 | grad norm: 4293.303 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.175 | TFLOPs: 14.62 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3800 | lm loss value: 7.328323E+00 | lm loss PPL: 1.522826E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 3900 | lm loss value: 7.338143E+00 | lm loss PPL: 1.537854E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 22:16:32,128] [INFO] [logging.py:68:log_dist] [Rank 0] step=4000, skipped=6, lr=[0.00029998556668597116, 0.00029998556668597116, 0.00029998556668597116], mom=[(0.9, 0.95), (0.9, 0.95), (0.9, 0.95)]
+0:  iteration     4000/  148693 | consumed samples:       512000 | consumed tokens:   1048576000 | elapsed time per iteration (s): 7.92 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.319992E+00 | loss scale: 4096.0 | grad norm: 5533.579 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.171 | TFLOPs: 14.61 |
+0: steps: 4000 loss: 7.3162 iter time (s): 6.189 samples/sec: 20.683
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4000 | lm loss value: 7.349638E+00 | lm loss PPL: 1.555633E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4100 | lm loss value: 7.340950E+00 | lm loss PPL: 1.542177E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     4200/  148693 | consumed samples:       537600 | consumed tokens:   1101004800 | elapsed time per iteration (s): 7.90 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.323552E+00 | loss scale: 4096.0 | grad norm: 5465.058 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.194 | TFLOPs: 14.64 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4200 | lm loss value: 7.343456E+00 | lm loss PPL: 1.546046E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-16 22:54:30,664] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,664] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,664] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,664] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,664] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,665] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,667] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,667] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-16 22:54:30,669] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-16 22:54:30,669] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4300 | lm loss value: 7.215846E+00 | lm loss PPL: 1.360824E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     4400/  148693 | consumed samples:       563200 | consumed tokens:   1153433600 | elapsed time per iteration (s): 7.91 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.211260E+00 | loss scale: 8192.0 | grad norm: 12118.152 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.172 | TFLOPs: 14.62 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4400 | lm loss value: 7.117996E+00 | lm loss PPL: 1.233975E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4500 | lm loss value: 7.068017E+00 | lm loss PPL: 1.173819E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: saving checkpoint at iteration    4500 to checkpoints/1796297
+0: [2022-10-16 23:25:21,271] [INFO] [logging.py:68:log_dist] [Rank 0] [Torch] Checkpoint global_step4500 is begin to save!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,332] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0: [2022-10-16 23:25:21,333] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_01-model_00-model_states.pt...
+0: [2022-10-16 23:25:21,877] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_01-model_00-model_states.pt.
+0: [2022-10-16 23:25:21,878] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_03-model_00-model_states.pt...
+0: [2022-10-16 23:25:21,962] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_03-model_00-model_states.pt.
+0: [2022-10-16 23:25:21,962] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_04-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,040] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_04-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,041] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_05-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,142] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_05-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,143] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_06-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,320] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_06-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,320] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_07-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,449] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_07-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,449] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_08-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,518] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_08-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,518] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_09-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,608] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_09-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,608] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_10-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,741] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_10-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,741] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_11-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,821] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_11-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,821] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_12-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,885] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_12-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,885] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_13-model_00-model_states.pt...
+0: [2022-10-16 23:25:22,949] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_13-model_00-model_states.pt.
+0: [2022-10-16 23:25:22,950] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_14-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,052] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_14-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,053] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_15-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,221] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_15-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,222] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_16-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,329] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_16-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,329] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_17-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,417] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_17-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,418] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_18-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,492] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_18-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,492] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_19-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,640] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_19-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,641] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_20-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,755] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_20-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,755] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_21-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,841] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_21-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,841] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_22-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,869] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_22-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,869] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_23-model_00-model_states.pt...
+0: [2022-10-16 23:25:23,958] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_23-model_00-model_states.pt.
+0: [2022-10-16 23:25:23,959] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_24-model_00-model_states.pt...
+0: [2022-10-16 23:25:24,041] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_24-model_00-model_states.pt.
+0: [2022-10-16 23:25:24,041] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_25-model_00-model_states.pt...
+0: [2022-10-16 23:25:24,068] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_25-model_00-model_states.pt.
+0: [2022-10-16 23:25:24,068] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_26-model_00-model_states.pt...
+0: [2022-10-16 23:25:24,174] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_26-model_00-model_states.pt.
+0: [2022-10-16 23:25:24,174] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/layer_28-model_00-model_states.pt...
+0: [2022-10-16 23:25:24,176] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/layer_28-model_00-model_states.pt.
+0: [2022-10-16 23:25:24,177] [INFO] [logging.py:68:log_dist] [Rank 0] Saving model checkpoint: checkpoints/1796297/global_step4500/mp_rank_00_model_states.pt
+0: [2022-10-16 23:25:24,177] [INFO] [torch_checkpoint_engine.py:15:save] [Torch] Saving checkpoints/1796297/global_step4500/mp_rank_00_model_states.pt...
+0: [2022-10-16 23:25:28,336] [INFO] [torch_checkpoint_engine.py:17:save] [Torch] Saved checkpoints/1796297/global_step4500/mp_rank_00_model_states.pt.
+0: [2022-10-16 23:25:28,336] [INFO] [torch_checkpoint_engine.py:27:commit] [Torch] Checkpoint global_step4500 is ready now!
+0:   successfully saved checkpoint at iteration    4500 to checkpoints/1796297
+0: time (ms) | save-checkpoint: 7138.25
+0:  iteration     4600/  148693 | consumed samples:       588800 | consumed tokens:   1205862400 | elapsed time per iteration (s): 7.96 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.068910E+00 | loss scale: 8192.0 | grad norm: 9300.481 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.089 | TFLOPs: 14.54 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4600 | lm loss value: 7.070185E+00 | lm loss PPL: 1.176365E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4700 | lm loss value: 7.051261E+00 | lm loss PPL: 1.154313E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-17 00:00:37,358] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,358] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,358] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,359] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,361] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,361] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,361] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,362] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:00:37,363] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 00:00:37,363] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 8192.0 to 16384.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4795
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 16384.0 to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:01:45,979] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 16384.0, reducing to 8192.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 4798
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 00:02:04,580] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0:  iteration     4800/  148693 | consumed samples:       614400 | consumed tokens:   1258291200 | elapsed time per iteration (s): 7.92 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.043525E+00 | loss scale: 4096.0 | grad norm: 34108.513 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.164 | TFLOPs: 14.61 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4800 | lm loss value: 7.181611E+00 | lm loss PPL: 1.315025E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 4900 | lm loss value: 7.263483E+00 | lm loss PPL: 1.427219E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     5000/  148693 | consumed samples:       640000 | consumed tokens:   1310720000 | elapsed time per iteration (s): 7.95 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.273193E+00 | loss scale: 4096.0 | grad norm: 9662.822 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.100 | TFLOPs: 14.55 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 5000 | lm loss value: 7.249929E+00 | lm loss PPL: 1.408005E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 5100 | lm loss value: 7.327317E+00 | lm loss PPL: 1.521295E+03 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     5200/  148693 | consumed samples:       665600 | consumed tokens:   1363148800 | elapsed time per iteration (s): 7.92 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 7.263895E+00 | loss scale: 4096.0 | grad norm: 12864.364 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 16.160 | TFLOPs: 14.60 |
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 5200 | lm loss value: 7.438963E+00 | lm loss PPL: 1.700986E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-17 01:17:29,312] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,312] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,313] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,315] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,315] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: [2022-10-17 01:17:29,317] [INFO] [unfused_optimizer.py:310:_update_scale] No Grad overflow for 500 iterations
+0: [2022-10-17 01:17:29,317] [INFO] [unfused_optimizer.py:312:_update_scale] Increasing dynamic loss scale from 4096.0 to 8192.0
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 5300 | lm loss value: 8.442359E+00 | lm loss PPL: 4.639486E+03 | 
+0: ------------------------------------------------------------------------------------------
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5303
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 8192.0 to 4096.0
+0: [2022-10-17 01:23:58,504] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 8192.0, reducing to 4096.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5304
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 4096.0 to 2048.0
+0: [2022-10-17 01:24:10,691] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 4096.0, reducing to 2048.0
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,845] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5305
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 2048.0 to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:22,846] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 2048.0, reducing to 1024.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,012] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5306
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 1024.0 to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:35,013] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 1024.0, reducing to 512.0
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,185] [INFO] [unfused_optimizer.py:300:_update_scale] Grad overflow on iteration: 5307
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:301:_update_scale] Reducing dynamic loss scale from 512.0 to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0
+0: [2022-10-17 01:24:47,186] [INFO] [unfused_optimizer.py:221:step] [deepspeed] fp16 dynamic loss scale overflow! Skipping step. Attempted loss scale: 512.0, reducing to 256.0

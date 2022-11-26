@@ -1,0 +1,542 @@
+noua-meg-ds/pretrain_gpt.py --tensor-model-parallel-size 1 --pipeline-model-parallel-size 1 --num-layers 24 --hidden-size 1024 --num-attention-heads 16 --ffn-hidden-size 4096 --seq-length 2048 --max-position-embeddings 2048 --micro-batch-size 16 --global-batch-size 512 --rampup-batch-size 128 128 2_000_000 --train-samples 73_242_187 --vocab-file /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-vocab.json --merge-file /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-merges.txt --loss-scale 0 --clip-grad 1.0 --init-method-std 0.0048 --position-embedding-type alibi --embed-layernorm --checkpoint-activations --no-masked-softmax-fusion --no-bias-gelu-fusion --no-bias-dropout-fusion --optimizer adam --adam-beta1 0.9 --adam-beta2 0.95 --adam-eps 1e-8 --lr 3.0e-4 --min-lr 1e-5 --lr-decay-style cosine --lr-decay-samples 73_242_187 --lr-warmup-samples 183_105 --clip-grad 1.0 --weight-decay 1e-1 --log-interval 200 --save-interval 1500 --eval-interval 100 --eval-iters 100 --tensorboard-dir /project/project_462000119/nouatazi/lumi_logs/tensorboard/blowup-4-adam-alibi-fp32-nokernel/1799771 --tensorboard-queue-size 5 --log-timers-to-tensorboard --log-batch-size-to-tensorboard --log-validation-ppl-to-tensorboard --save checkpoints/1799771 --load checkpoints/1799771 --data-path /project/project_462000119/nouatazi/datablations/stability_study/data/owt2 --data-impl mmap --split 949,50,1 --deepspeed --deepspeed_config ds_configs/1799771.json --zero-stage 0 --deepspeed-activation-checkpointing
+START 1799771: Mon 17 Oct 2022 05:21:25 PM EEST
+0: Launching on nid005063 (0/1), master nid005063 port 9999, GPUs 8, CUDA: True
+0: using world size: 8, data-parallel-size: 8, tensor-model-parallel size: 1, pipeline-model-parallel size: 1 
+0: using torch.float32 for parameters ...
+0: ------------------------ arguments ------------------------
+0:   abort_on_unmet_fused_kernel_constraints ......... False
+0:   accumulate_allreduce_grads_in_fp32 .............. False
+0:   adam_beta1 ...................................... 0.9
+0:   adam_beta2 ...................................... 0.95
+0:   adam_eps ........................................ 1e-08
+0:   adlr_autoresume ................................. False
+0:   adlr_autoresume_interval ........................ 1000
+0:   apply_query_key_layer_scaling ................... True
+0:   apply_residual_connection_post_layernorm ........ False
+0:   attention_dropout ............................... 0.1
+0:   attention_softmax_in_fp32 ....................... False
+0:   bert_binary_head ................................ True
+0:   bert_load ....................................... None
+0:   bf16 ............................................ False
+0:   bias_dropout_fusion ............................. False
+0:   bias_gelu_fusion ................................ False
+0:   biencoder_projection_dim ........................ 0
+0:   biencoder_shared_query_context_model ............ False
+0:   block_data_path ................................. None
+0:   checkpoint_activations .......................... True
+0:   checkpoint_in_cpu ............................... False
+0:   checkpoint_num_layers ........................... 1
+0:   clip_grad ....................................... 1.0
+0:   codecarbon_dir .................................. None
+0:   consumed_train_samples .......................... 0
+0:   consumed_train_tokens ........................... 0
+0:   consumed_valid_samples .......................... 0
+0:   contigious_checkpointing ........................ False
+0:   cpu_optimizer ................................... False
+0:   cpu_torch_adam .................................. False
+0:   curriculum_learning ............................. False
+0:   data_impl ....................................... mmap
+0:   data_parallel_size .............................. 8
+0:   data_path ....................................... ['/project/project_462000119/nouatazi/datablations/stability_study/data/owt2']
+0:   dataloader_type ................................. single
+0:   DDP_impl ........................................ local
+0:   decoder_seq_length .............................. None
+0:   deepscale ....................................... False
+0:   deepscale_config ................................ None
+0:   deepspeed ....................................... True
+0:   deepspeed_activation_checkpointing .............. True
+0:   deepspeed_config ................................ ds_configs/1799771.json
+0:   deepspeed_mpi ................................... False
+0:   distribute_checkpointed_activations ............. False
+0:   distributed_backend ............................. nccl
+0:   embed_layernorm ................................. True
+0:   embedding_path .................................. None
+0:   encoder_seq_length .............................. 2048
+0:   eod_mask_loss ................................... False
+0:   eval_interval ................................... 100
+0:   eval_iters ...................................... 100
+0:   eval_only ....................................... None
+0:   evidence_data_path .............................. None
+0:   exit_duration_in_mins ........................... None
+0:   exit_interval ................................... None
+0:   ffn_hidden_size ................................. 4096
+0:   finetune ........................................ False
+0:   fp16 ............................................ False
+0:   fp16_lm_cross_entropy ........................... False
+0:   fp32_residual_connection ........................ False
+0:   gigaflos_no_embeds .............................. 0
+0:   global_batch_size ............................... 512
+0:   glu_activation .................................. None
+0:   hidden_dropout .................................. 0.1
+0:   hidden_size ..................................... 1024
+0:   hysteresis ...................................... 2
+0:   ict_head_size ................................... None
+0:   ict_load ........................................ None
+0:   img_dim ......................................... 224
+0:   indexer_batch_size .............................. 128
+0:   indexer_log_interval ............................ 1000
+0:   inference ....................................... False
+0:   init_method_std ................................. 0.0048
+0:   init_method_xavier_uniform ...................... False
+0:   initial_loss_scale .............................. 4294967296
+0:   kill_switch_path ................................ None
+0:   kv_channels ..................................... 64
+0:   layernorm_epsilon ............................... 1e-05
+0:   lazy_mpu_init ................................... None
+0:   load ............................................ checkpoints/1799771
+0:   local_rank ...................................... None
+0:   log_batch_size_to_tensorboard ................... True
+0:   log_interval .................................... 200
+0:   log_learning_rate_to_tensorboard ................ True
+0:   log_level ....................................... None
+0:   log_level_replica ............................... None
+0:   log_loss_scale_to_tensorboard ................... True
+0:   log_num_zeros_in_grad ........................... False
+0:   log_params_norm ................................. False
+0:   log_path ........................................ None
+0:   log_timers_to_tensorboard ....................... True
+0:   log_validation_ppl_to_tensorboard ............... True
+0:   loss_on_targets_only ............................ False
+0:   loss_scale ...................................... 0.0
+0:   loss_scale_window ............................... 1000
+0:   lr .............................................. 0.0003
+0:   lr_decay_iters .................................. None
+0:   lr_decay_samples ................................ 73242187
+0:   lr_decay_style .................................. cosine
+0:   lr_decay_tokens ................................. None
+0:   lr_warmup_fraction .............................. None
+0:   lr_warmup_iters ................................. 0
+0:   lr_warmup_samples ............................... 183105
+0:   make_vocab_size_divisible_by .................... 128
+0:   mask_prob ....................................... 0.15
+0:   masked_softmax_fusion ........................... False
+0:   max_position_embeddings ......................... 2048
+0:   mean_noise_span_length .......................... None
+0:   memory_centric_tiled_linear ..................... False
+0:   merge_file ...................................... /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-merges.txt
+0:   micro_batch_size ................................ 16
+0:   min_loss_scale .................................. 1.0
+0:   min_lr .......................................... 1e-05
+0:   mmap_warmup ..................................... False
+0:   no_load_optim ................................... None
+0:   no_load_rng ..................................... None
+0:   no_save_optim ................................... None
+0:   no_save_rng ..................................... None
+0:   noise_density ................................... None
+0:   num_attention_heads ............................. 16
+0:   num_channels .................................... 3
+0:   num_classes ..................................... 1000
+0:   num_layers ...................................... 24
+0:   num_layers_per_virtual_pipeline_stage ........... None
+0:   num_workers ..................................... 2
+0:   onnx_safe ....................................... None
+0:   openai_gelu ..................................... False
+0:   optimizer ....................................... adam
+0:   override_lr_scheduler ........................... False
+0:   pad_vocab_size_to ............................... None
+0:   params_dtype .................................... torch.float32
+0:   partition_activations ........................... False
+0:   patch_dim ....................................... 16
+0:   pipeline_model_parallel_size .................... 1
+0:   position_embedding_type ......................... PositionEmbeddingType.alibi
+0:   pp_partition_method ............................. None
+0:   profile_backward ................................ False
+0:   query_in_block_prob ............................. 0.1
+0:   rampup_batch_size ............................... ['128', '128', '2_000_000']
+0:   rank ............................................ 0
+0:   remote_device ................................... none
+0:   reset_attention_mask ............................ False
+0:   reset_position_ids .............................. False
+0:   retriever_report_topk_accuracies ................ []
+0:   retriever_score_scaling ......................... False
+0:   retriever_seq_length ............................ 256
+0:   reweight_loss_based_on_position_frequency ....... False
+0:   sample_rate ..................................... 1.0
+0:   save ............................................ checkpoints/1799771
+0:   save_interval ................................... 1500
+0:   scatter_gather_tensors_in_pipeline .............. True
+0:   scattered_embeddings ............................ False
+0:   seed ............................................ 1234
+0:   seq_length ...................................... 2048
+0:   sgd_momentum .................................... 0.9
+0:   short_seq_prob .................................. 0.1
+0:   skip_train_iteration_range ...................... None
+0:   split ........................................... 949,50,1
+0:   split_transformers .............................. False
+0:   sync_tp_duplicated_parameters ................... False
+0:   synchronize_each_layer .......................... False
+0:   tensor_model_parallel_size ...................... 1
+0:   tensorboard_dir ................................. /project/project_462000119/nouatazi/lumi_logs/tensorboard/blowup-4-adam-alibi-fp32-nokernel/1799771
+0:   tensorboard_log_interval ........................ 1
+0:   tensorboard_queue_size .......................... 5
+0:   test_weighted_split_names ....................... None
+0:   test_weighted_split_paths ....................... None
+0:   test_weighted_split_paths_path .................. None
+0:   test_weighted_split_splits ...................... None
+0:   test_weighted_split_weights ..................... None
+0:   tile_factor ..................................... 1
+0:   titles_data_path ................................ None
+0:   tokenizer_name_or_path .......................... None
+0:   tokenizer_type .................................. GPT2BPETokenizer
+0:   train_iters ..................................... None
+0:   train_samples ................................... 73242187
+0:   train_tokens .................................... None
+0:   train_weighted_split_paths ...................... None
+0:   train_weighted_split_paths_path ................. None
+0:   universal_checkpoint ............................ False
+0:   use_bnb_optimizer ............................... False
+0:   use_checkpoint_lr_scheduler ..................... False
+0:   use_contiguous_buffers_in_ddp ................... False
+0:   use_cpu_initialization .......................... None
+0:   use_one_sent_docs ............................... False
+0:   use_pin_memory .................................. False
+0:   valid_num_workers ............................... 2
+0:   valid_weighted_split_names ...................... None
+0:   valid_weighted_split_paths ...................... None
+0:   valid_weighted_split_paths_path ................. None
+0:   valid_weighted_split_splits ..................... None
+0:   valid_weighted_split_weights .................... None
+0:   virtual_pipeline_model_parallel_size ............ None
+0:   vocab_extra_ids ................................. 0
+0:   vocab_file ...................................... /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-vocab.json
+0:   weight_decay .................................... 0.1
+0:   world_size ...................................... 8
+0:   zero_allgather_bucket_size ...................... 0.0
+0:   zero_contigious_gradients ....................... False
+0:   zero_reduce_bucket_size ......................... 0.0
+0:   zero_reduce_scatter ............................. False
+0:   zero_stage ...................................... 0
+0: -------------------- end of arguments ---------------------
+0: will use batch size rampup starting from global batch size 128 to global batch size 512 with batch size increments 128 over 2000000 samples.
+0: > building GPT2BPETokenizer tokenizer ...
+0:  > padded vocab (size: 50257) with 47 dummy tokens (new size: 50304)
+0: DeepSpeed general environment info:
+0: torch install path ............... ['/pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch']
+0: torch version .................... 1.12.1+rocm5.1.1
+0: torch cuda version ............... None
+0: torch hip version ................ 5.1.20531-cacfa990
+0: nvcc version ..................... None
+0: deepspeed install path ........... ['/pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/deepspeed']
+0: deepspeed info ................... 0.7.2, unknown, unknown
+0: deepspeed wheel compiled w. ...... torch 1.12, hip 5.1
+0: **** Git info for Megatron: git_hash=unknown git_branch=unknown ****
+0: > initializing torch distributed ...
+0: [2022-10-17 17:22:31,419] [INFO] [comm.py:633:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+0: > setting tensorboard ...
+0: > initializing tensor model parallel with size 1
+0: > initializing pipeline model parallel with size 1
+0: > setting random seeds to 1234 ...
+0: [2022-10-17 17:22:34,204] [INFO] [checkpointing.py:226:model_parallel_cuda_manual_seed] > initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+0: > compiling dataset index builder ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: > WARNING: fused kernels are not used ...
+0: make: Entering directory '/pfs/lustrep4/projappl/project_462000119/nouatazi/noua-meg-ds/megatron/data'
+0: make: Nothing to be done for 'default'.
+0: make: Leaving directory '/pfs/lustrep4/projappl/project_462000119/nouatazi/noua-meg-ds/megatron/data'
+0: >>> done with dataset index builder. Compilation time: 0.055 seconds
+0: > WARNING: fused kernels are not used ...
+0: time to initialize megatron (seconds): 46.849
+0: [after megatron is initialized] datetime: 2022-10-17 17:22:38 
+0: building GPT model ...
+0: [2022-10-17 17:22:38,898] [INFO] [utils.py:827:see_memory_usage] Before Building Model
+0: [2022-10-17 17:22:38,900] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+0: [2022-10-17 17:22:38,900] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 180.64 GB, percent = 35.9%
+0: SEED_LAYERS=False BASE_SEED=1234 SEED_FN=None
+0: Using topology: {ProcessCoord(pipe=0, data=0, model=0): 0, ProcessCoord(pipe=0, data=1, model=0): 1, ProcessCoord(pipe=0, data=2, model=0): 2, ProcessCoord(pipe=0, data=3, model=0): 3, ProcessCoord(pipe=0, data=4, model=0): 4, ProcessCoord(pipe=0, data=5, model=0): 5, ProcessCoord(pipe=0, data=6, model=0): 6, ProcessCoord(pipe=0, data=7, model=0): 7}
+0: [2022-10-17 17:22:39,172] [INFO] [module.py:366:_partition_layers] Partitioning pipeline stages with method type:transformer
+0: stage=0 layers=30
+0:      0: _to_float16
+0:      1: EmbeddingPipe
+0:      2: <lambda>
+0:      3: ParallelTransformerLayerPipe
+0:      4: ParallelTransformerLayerPipe
+0:      5: ParallelTransformerLayerPipe
+0:      6: ParallelTransformerLayerPipe
+0:      7: ParallelTransformerLayerPipe
+0:      8: ParallelTransformerLayerPipe
+0:      9: ParallelTransformerLayerPipe
+0:     10: ParallelTransformerLayerPipe
+0:     11: ParallelTransformerLayerPipe
+0:     12: ParallelTransformerLayerPipe
+0:     13: ParallelTransformerLayerPipe
+0:     14: ParallelTransformerLayerPipe
+0:     15: ParallelTransformerLayerPipe
+0:     16: ParallelTransformerLayerPipe
+0:     17: ParallelTransformerLayerPipe
+0:     18: ParallelTransformerLayerPipe
+0:     19: ParallelTransformerLayerPipe
+0:     20: ParallelTransformerLayerPipe
+0:     21: ParallelTransformerLayerPipe
+0:     22: ParallelTransformerLayerPipe
+0:     23: ParallelTransformerLayerPipe
+0:     24: ParallelTransformerLayerPipe
+0:     25: ParallelTransformerLayerPipe
+0:     26: ParallelTransformerLayerPipe
+0:     27: undo
+0:     28: MixedFusedLayerNorm
+0:     29: EmbeddingPipe
+0:   loss: CrossEntropy
+0: [2022-10-17 17:22:41,719] [INFO] [utils.py:827:see_memory_usage] After Building Model
+0: [2022-10-17 17:22:41,720] [INFO] [utils.py:828:see_memory_usage] MA 1.36 GB         Max_MA 1.36 GB         CA 1.37 GB         Max_CA 1 GB 
+0: [2022-10-17 17:22:41,720] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 181.63 GB, percent = 36.1%
+0: setting training iterations to 148693
+0: > learning rate decay style: cosine
+0: DeepSpeed is enabled.
+0: [2022-10-17 17:22:41,732] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed info: version=0.7.2, git-hash=unknown, git-branch=unknown
+0: [2022-10-17 17:22:41,818] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+0: [2022-10-17 17:22:41,818] [INFO] [logging.py:68:log_dist] [Rank 0] Removing param_group that has no 'params' in the client Optimizer
+0: [2022-10-17 17:22:41,819] [INFO] [logging.py:68:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+0: [2022-10-17 17:22:41,830] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed Basic Optimizer = {basic_optimizer.__class__.__name__}
+0: [2022-10-17 17:22:41,830] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed Final Optimizer = Adam
+0: [2022-10-17 17:22:41,830] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+0: [2022-10-17 17:22:41,830] [INFO] [logging.py:68:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.learning_rates.AnnealingLR object at 0x14da400bce80>
+0: [2022-10-17 17:22:41,830] [INFO] [logging.py:68:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95), (0.9, 0.95)]
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:987:print] DeepSpeedEngine configuration:
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   activation_checkpointing_config  {
+0:     "partition_activations": false, 
+0:     "contiguous_memory_optimization": false, 
+0:     "cpu_checkpointing": false, 
+0:     "number_checkpoints": null, 
+0:     "synchronize_checkpoint_boundary": false, 
+0:     "profile": false
+0: }
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   amp_enabled .................. False
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   amp_params ................... False
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   autotuning_config ............ {
+0:     "enabled": false, 
+0:     "start_step": null, 
+0:     "end_step": null, 
+0:     "metric_path": null, 
+0:     "arg_mappings": null, 
+0:     "metric": "throughput", 
+0:     "model_info": null, 
+0:     "results_dir": null, 
+0:     "exps_dir": null, 
+0:     "overwrite": true, 
+0:     "fast": true, 
+0:     "start_profile_step": 3, 
+0:     "end_profile_step": 5, 
+0:     "tuner_type": "gridsearch", 
+0:     "tuner_early_stopping": 5, 
+0:     "tuner_num_trials": 50, 
+0:     "model_info_path": null, 
+0:     "mp_size": 1, 
+0:     "max_train_batch_size": null, 
+0:     "min_train_batch_size": 1, 
+0:     "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+0:     "min_train_micro_batch_size_per_gpu": 1, 
+0:     "num_tuning_micro_batch_sizes": 3
+0: }
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   bfloat16_enabled ............. False
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   checkpoint_tag_validation_enabled  True
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   checkpoint_tag_validation_fail  False
+0: [2022-10-17 17:22:41,831] [INFO] [config.py:991:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x14da4002e940>
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   communication_data_type ...... None
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_par
+0: ameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   curriculum_enabled ........... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   curriculum_params ............ False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   dataloader_drop_last ......... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   disable_allgather ............ False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   dump_state ................... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   dynamic_loss_scale_args ...... None
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_enabled ........... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_gas_boundary_resolution  1
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_layer_name ........ bert.encoder.layer
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_layer_num ......... 0
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_max_iter .......... 100
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_stability ......... 1e-06
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_tol ............... 0.01
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   eigenvalue_verbose ........... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   elasticity_enabled ........... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   flops_profiler_config ........ {
+0:     "enabled": false, 
+0:     "profile_step": 1, 
+0:     "module_depth": -1, 
+0:     "top_modules": 1, 
+0:     "detailed": true, 
+0:     "output_file": null
+0: }
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   fp16_auto_cast ............... None
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   fp16_enabled ................. False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   fp16_master_weights_and_gradients  False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   global_rank .................. 0
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   gradient_accumulation_steps .. 4
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   gradient_clipping ............ 1.0
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   gradient_predivide_factor .... 1.0
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   initial_dynamic_scale ........ 4294967296
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   load_universal_checkpoint .... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   loss_scale ................... 0
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   memory_breakdown ............. False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   monitor_config ............... <deepspeed.monitor.config.DeepSpeedMonitorConfig object at 0x14da4002e880>
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   nebula_config ................ {
+0:     "enabled": false, 
+0:     "persistent_storage_path": null, 
+0:     "persistent_time_interval": 100, 
+0:     "num_of_version_in_retention": 2, 
+0:     "enable_nebula_load": true, 
+0:     "load_path": null
+0: }
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   optimizer_legacy_fusion ...... False
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   optimizer_name ............... None
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   optimizer_params ............. None
+0: [2022-10-17 17:22:41,832] [INFO] [config.py:991:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0}
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   pld_enabled .................. False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   pld_params ................... False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   prescale_gradients ........... False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   scheduler_name ............... None
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   scheduler_params ............. None
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   sparse_attention ............. None
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   sparse_gradients_enabled ..... False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   steps_per_print .............. 2000
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   train_batch_size ............. 512
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   train_micro_batch_size_per_gpu  16
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   wall_clock_breakdown ......... False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   world_size ................... 8
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   zero_allow_untested_optimizer  False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   zero_config .................. stage=0 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500000000 allgather_partitions=True allgather_bucket_size=500000000 overlap_comm=False load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1000000000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50000000 param_persistence_threshold=100000 model_persistence_threshold=9223372036854775807 max_live_parameters=1000000000 max_reuse_distance=1000000000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   zero_enabled ................. False
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:991:print]   zero_optimization_stage ...... 0
+0: [2022-10-17 17:22:41,833] [INFO] [config.py:976:print_user_config]   json = {
+0:     "train_micro_batch_size_per_gpu": 16, 
+0:     "train_batch_size": 512, 
+0:     "gradient_clipping": 1.0, 
+0:     "zero_optimization": {
+0:         "stage": 0
+0:     }, 
+0:     "fp16": {
+0:         "enabled": false, 
+0:         "loss_scale": 0, 
+0:         "loss_scale_window": 500, 
+0:         "hysteresis": 2, 
+0:         "min_loss_scale": 1, 
+0:         "initial_scale_power": 12
+0:     }, 
+0:     "steps_per_print": 2.000000e+03, 
+0:     "wall_clock_breakdown": false
+0: }
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: 
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: 
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Using /tmp/nouatazi/torch_extensions/ as PyTorch extensions root...
+0: Emitting ninja build file /tmp/nouatazi/torch_extensions/utils/build.ninja...
+0: Building extension module utils...
+0: Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+0: [1/2] c++ -MMD -MF flatten_unflatten.o.d -DTORCH_EXTENSION_NAME=utils -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch/include -isystem /pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch/include/TH -isystem /pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch/include/THC -isystem /opt/cray/pe/python/3.9.12.1/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++14 -c /pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/deepspeed/ops/csrc/utils/flatten_unflatten.cpp -o flatten_unflatten.o -fPIC -D__HIP_PLATFORM_HCC__=1 -DUSE_ROCM=1
+0: [2/2] c++ flatten_unflatten.o -shared -L/pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch/lib -lc10 -ltorch_cpu -ltorch -ltorch_python -o utils.so
+0: Loading extension module utils...
+0: Time to load utils op: 25.629866123199463 seconds
+0: Loading extension module utils...
+0: Loading extension module utils...Loading extension module utils...
+0: 
+0: Loading extension module utils...Loading extension module utils...Loading extension module utils...
+0: 
+0: 
+0: Time to load utils op: 25.66272807121277 seconds
+0: Time to load utils op: 25.66269564628601 seconds
+0: Time to load utils op: 25.662714958190918 seconds
+0: Time to load utils op: 25.66271996498108 secondsTime to load utils op: 25.66272211074829 secondsTime to load utils op: 25.662408113479614 seconds
+0: 
+0: 
+0: [2022-10-17 17:23:07,537] [INFO] [engine.py:87:__init__] CONFIG: micro_batches=4 micro_batch_size=16
+0: Loading extension module utils...
+0: Time to load utils op: 25.66391658782959 seconds
+0: [2022-10-17 17:23:07,546] [INFO] [engine.py:145:__init__] RANK=0 STAGE=0 LAYERS=30 [0, 30) STAGE_PARAMS=353824768 (353.825M) TOTAL_PARAMS=353824768 (353.825M) UNIQUE_PARAMS=353824768 (353.825M)
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: WARNING: could not find the metadata file checkpoints/1799771 
+0:     will not load any checkpoints and will start from random
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: [2022-10-17 17:23:07,557] [WARNING] [engine.py:2571:load_checkpoint] Unable to find latest file at checkpoints/1799771/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+0: time (ms) | load-checkpoint: 0.52
+0: estimated model parameters: 0.353824768
+0: estimated model parameters without embeddings: 0.302313472
+0: [after model, optimizer, and learning rate scheduler are built] datetime: 2022-10-17 17:23:08 
+0: > building train, validation, and test datasets ...
+0:  > datasets target sizes (minimum size):
+0:     train:      73242187
+0:     validation: 76134400
+0:     test:       51200
+0: > building train, validation, and test datasets for GPT ...
+0:  > building dataset index ...
+0:     reading sizes...
+0:     reading pointers...
+0:     reading document index...
+0:     creating numpy buffer of mmap...
+0:     creating memory view of numpy buffer...
+0:  > finished creating indexed dataset in 0.029459 seconds
+0:     number of documents: 17103059
+0:  > dataset split:
+0:     train:
+0:      document indices in [0, 16230803) total of 16230803 documents
+0:     validation:
+0:      document indices in [16230803, 17085956) total of 855153 documents
+0:     test:
+0:      document indices in [17085956, 17103059) total of 17103 documents
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.139 seconds
+0:     total number of samples: 75778606
+0:     total number of epochs: 10
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.065 seconds
+0:     total number of samples: 76299323
+0:     total number of epochs: 178
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.153 seconds
+0:     total number of samples: 51511
+0:     total number of epochs: 6
+0: > finished creating GPT datasets ...
+0: [after dataloaders are built] datetime: 2022-10-17 17:23:12 
+0: done with setup ...
+0: time (ms) | model-and-optimizer-setup: 29663.59 | train/valid/test-data-iterators-setup: 3485.77
+0: training ...
+0: Number of parameters: [tensor rank - pipeline rank] w/ and w/o embeddings:
+0: [000-000] 0.3538B / 0.3023B
+0: [before the start of training step] datetime: 2022-10-17 17:23:12 
+0: [2022-10-17 17:23:15,113] [INFO] [checkpointing.py:547:forward] Activation Checkpointing Information
+0: [2022-10-17 17:23:15,113] [INFO] [checkpointing.py:548:forward] ----Partition Activations False, CPU CHECKPOINTING False
+0: [2022-10-17 17:23:15,113] [INFO] [checkpointing.py:551:forward] ----contiguous Memory Checkpointing False with 24 total layers
+0: [2022-10-17 17:23:15,113] [INFO] [checkpointing.py:554:forward] ----Synchronization False
+0: [2022-10-17 17:23:15,113] [INFO] [checkpointing.py:555:forward] ----Profiling time in checkpointing False
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 100 | lm loss value: 1.042973E+01 | lm loss PPL: 3.385126E+04 | 
+0: -----------------------------------------------------------------------------------------
+0: [Rank 0] (after 200 iterations) memory (MB) | allocated: 10394.08154296875 | max allocated: 31267.37109375 | reserved: 39392.0 | max reserved: 39392.0
+0:  iteration      200/  148693 | consumed samples:        25600 | consumed tokens:     52428800 | elapsed time per iteration (s): 10.02 | learning rate: 4.194E-05 | global batch size:   128 | lm loss: 1.023872E+01 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 12.779 | TFLOPs: 11.55 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 200 | lm loss value: 9.119372E+00 | lm loss PPL: 9.130469E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 300 | lm loss value: 8.125072E+00 | lm loss PPL: 3.378110E+03 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      400/  148693 | consumed samples:        51200 | consumed tokens:    104857600 | elapsed time per iteration (s): 11.00 | learning rate: 8.389E-05 | global batch size:   128 | lm loss: 8.171517E+00 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 11.636 | TFLOPs: 10.52 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 400 | lm loss value: 7.889775E+00 | lm loss PPL: 2.669843E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 500 | lm loss value: 7.843956E+00 | lm loss PPL: 2.550273E+03 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      600/  148693 | consumed samples:        76800 | consumed tokens:    157286400 | elapsed time per iteration (s): 11.00 | learning rate: 1.258E-04 | global batch size:   128 | lm loss: 7.789877E+00 | num zeros: 0.0 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 11.640 | TFLOPs: 10.52 |
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 600 | lm loss value: 7.844281E+00 | lm loss PPL: 2.551102E+03 | 
+0: -----------------------------------------------------------------------------------------

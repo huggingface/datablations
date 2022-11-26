@@ -1,0 +1,449 @@
+Megatron-DeepSpeed-orig/pretrain_gpt.py --tensor-model-parallel-size 1 --pipeline-model-parallel-size 1 --num-layers 24 --hidden-size 1024 --num-attention-heads 16 --ffn-hidden-size 4096 --seq-length 2048 --max-position-embeddings 2048 --micro-batch-size 16 --global-batch-size 512 --rampup-batch-size 128 128 2_000_000 --train-samples 73_242_187 --vocab-file /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-vocab.json --merge-file /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-merges.txt --loss-scale 0 --clip-grad 1.0 --init-method-std 0.0048 --position-embedding-type alibi --embed-layernorm --fp16 --checkpoint-activations --optimizer adam --adam-beta1 0.9 --adam-beta2 0.95 --adam-eps 1e-8 --lr 3.0e-4 --min-lr 1e-5 --lr-decay-style cosine --lr-decay-samples 73_242_187 --lr-warmup-samples 183_105 --clip-grad 1.0 --weight-decay 1e-1 --log-interval 200 --save-interval 1500 --eval-interval 100 --eval-iters 100 --tensorboard-dir /project/project_462000119/nouatazi/lumi_logs/tensorboard/blowup-4-alibi-nods/1814186 --tensorboard-queue-size 5 --log-timers-to-tensorboard --log-batch-size-to-tensorboard --log-validation-ppl-to-tensorboard --save checkpoints/1814186 --load checkpoints/1814186 --data-path /project/project_462000119/nouatazi/datablations/stability_study/data/owt2 --data-impl mmap --split 949,50,1
+START 1814186: Wed 19 Oct 2022 11:58:47 PM EEST
+0: Launching on nid005109 (0/1), master nid005109 port 9999, GPUs 8, CUDA: True
+0: using world size: 8, data-parallel-size: 8, tensor-model-parallel size: 1, pipeline-model-parallel size: 1 
+0: using torch.float16 for parameters ...
+0: ------------------------ arguments ------------------------
+0:   abort_on_unmet_fused_kernel_constraints ......... False
+0:   accumulate_allreduce_grads_in_fp32 .............. False
+0:   adam_beta1 ...................................... 0.9
+0:   adam_beta2 ...................................... 0.95
+0:   adam_eps ........................................ 1e-08
+0:   adlr_autoresume ................................. False
+0:   adlr_autoresume_interval ........................ 1000
+0:   apply_query_key_layer_scaling ................... True
+0:   apply_residual_connection_post_layernorm ........ False
+0:   attention_dropout ............................... 0.1
+0:   attention_softmax_in_fp32 ....................... False
+0:   bert_binary_head ................................ True
+0:   bert_load ....................................... None
+0:   bf16 ............................................ False
+0:   bias_dropout_fusion ............................. True
+0:   bias_gelu_fusion ................................ True
+0:   biencoder_projection_dim ........................ 0
+0:   biencoder_shared_query_context_model ............ False
+0:   block_data_path ................................. None
+0:   checkpoint_activations .......................... True
+0:   checkpoint_in_cpu ............................... False
+0:   checkpoint_num_layers ........................... 1
+0:   clip_grad ....................................... 1.0
+0:   codecarbon_dir .................................. None
+0:   consumed_train_samples .......................... 0
+0:   consumed_train_tokens ........................... 0
+0:   consumed_valid_samples .......................... 0
+0:   contigious_checkpointing ........................ False
+0:   cpu_optimizer ................................... False
+0:   cpu_torch_adam .................................. False
+0:   curriculum_learning ............................. False
+0:   data_impl ....................................... mmap
+0:   data_parallel_size .............................. 8
+0:   data_path ....................................... ['/project/project_462000119/nouatazi/datablations/stability_study/data/owt2']
+0:   dataloader_type ................................. single
+0:   DDP_impl ........................................ local
+0:   decoder_seq_length .............................. None
+0:   deepscale ....................................... False
+0:   deepscale_config ................................ None
+0:   deepspeed ....................................... False
+0:   deepspeed_activation_checkpointing .............. False
+0:   deepspeed_config ................................ None
+0:   deepspeed_mpi ................................... False
+0:   distribute_checkpointed_activations ............. False
+0:   distributed_backend ............................. nccl
+0:   embed_layernorm ................................. True
+0:   embedding_path .................................. None
+0:   encoder_seq_length .............................. 2048
+0:   eod_mask_loss ................................... False
+0:   eval_interval ................................... 100
+0:   eval_iters ...................................... 100
+0:   eval_only ....................................... None
+0:   evidence_data_path .............................. None
+0:   exit_duration_in_mins ........................... None
+0:   exit_interval ................................... None
+0:   ffn_hidden_size ................................. 4096
+0:   finetune ........................................ False
+0:   fp16 ............................................ True
+0:   fp16_lm_cross_entropy ........................... False
+0:   fp32_residual_connection ........................ False
+0:   gigaflos_no_embeds .............................. 0
+0:   global_batch_size ............................... 512
+0:   glu_activation .................................. None
+0:   hidden_dropout .................................. 0.1
+0:   hidden_size ..................................... 1024
+0:   hysteresis ...................................... 2
+0:   ict_head_size ................................... None
+0:   ict_load ........................................ None
+0:   img_dim ......................................... 224
+0:   indexer_batch_size .............................. 128
+0:   indexer_log_interval ............................ 1000
+0:   inference ....................................... False
+0:   init_method_std ................................. 0.0048
+0:   init_method_xavier_uniform ...................... False
+0:   initial_loss_scale .............................. 4294967296
+0:   kill_switch_path ................................ None
+0:   kv_channels ..................................... 64
+0:   layernorm_epsilon ............................... 1e-05
+0:   lazy_mpu_init ................................... None
+0:   load ............................................ checkpoints/1814186
+0:   local_rank ...................................... None
+0:   log_batch_size_to_tensorboard ................... True
+0:   log_interval .................................... 200
+0:   log_learning_rate_to_tensorboard ................ True
+0:   log_level ....................................... None
+0:   log_level_replica ............................... None
+0:   log_loss_scale_to_tensorboard ................... True
+0:   log_num_zeros_in_grad ........................... False
+0:   log_params_norm ................................. False
+0:   log_path ........................................ None
+0:   log_timers_to_tensorboard ....................... True
+0:   log_validation_ppl_to_tensorboard ............... True
+0:   loss_on_targets_only ............................ False
+0:   loss_scale ...................................... 0.0
+0:   loss_scale_window ............................... 1000
+0:   lr .............................................. 0.0003
+0:   lr_decay_iters .................................. None
+0:   lr_decay_samples ................................ 73242187
+0:   lr_decay_style .................................. cosine
+0:   lr_decay_tokens ................................. None
+0:   lr_warmup_fraction .............................. None
+0:   lr_warmup_iters ................................. 0
+0:   lr_warmup_samples ............................... 183105
+0:   make_vocab_size_divisible_by .................... 128
+0:   mask_prob ....................................... 0.15
+0:   masked_softmax_fusion ........................... True
+0:   max_position_embeddings ......................... 2048
+0:   mean_noise_span_length .......................... None
+0:   memory_centric_tiled_linear ..................... False
+0:   merge_file ...................................... /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-merges.txt
+0:   micro_batch_size ................................ 16
+0:   min_loss_scale .................................. 1.0
+0:   min_lr .......................................... 1e-05
+0:   mmap_warmup ..................................... False
+0:   no_load_optim ................................... None
+0:   no_load_rng ..................................... None
+0:   no_save_optim ................................... None
+0:   no_save_rng ..................................... None
+0:   noise_density ................................... None
+0:   num_attention_heads ............................. 16
+0:   num_channels .................................... 3
+0:   num_classes ..................................... 1000
+0:   num_layers ...................................... 24
+0:   num_layers_per_virtual_pipeline_stage ........... None
+0:   num_workers ..................................... 2
+0:   onnx_safe ....................................... None
+0:   openai_gelu ..................................... False
+0:   optimizer ....................................... adam
+0:   override_lr_scheduler ........................... False
+0:   pad_vocab_size_to ............................... None
+0:   params_dtype .................................... torch.float16
+0:   partition_activations ........................... False
+0:   patch_dim ....................................... 16
+0:   pipeline_model_parallel_size .................... 1
+0:   position_embedding_type ......................... PositionEmbeddingType.alibi
+0:   pp_partition_method ............................. None
+0:   profile_backward ................................ False
+0:   query_in_block_prob ............................. 0.1
+0:   rampup_batch_size ............................... ['128', '128', '2_000_000']
+0:   rank ............................................ 0
+0:   remote_device ................................... none
+0:   reset_attention_mask ............................ False
+0:   reset_position_ids .............................. False
+0:   retriever_report_topk_accuracies ................ []
+0:   retriever_score_scaling ......................... False
+0:   retriever_seq_length ............................ 256
+0:   reweight_loss_based_on_position_frequency ....... False
+0:   sample_rate ..................................... 1.0
+0:   save ............................................ checkpoints/1814186
+0:   save_interval ................................... 1500
+0:   scatter_gather_tensors_in_pipeline .............. True
+0:   scattered_embeddings ............................ False
+0:   seed ............................................ 1234
+0:   seq_length ...................................... 2048
+0:   sgd_momentum .................................... 0.9
+0:   short_seq_prob .................................. 0.1
+0:   skip_train_iteration_range ...................... None
+0:   split ........................................... 949,50,1
+0:   split_transformers .............................. False
+0:   sync_tp_duplicated_parameters ................... False
+0:   synchronize_each_layer .......................... False
+0:   tensor_model_parallel_size ...................... 1
+0:   tensorboard_dir ................................. /project/project_462000119/nouatazi/lumi_logs/tensorboard/blowup-4-alibi-nods/1814186
+0:   tensorboard_log_interval ........................ 1
+0:   tensorboard_queue_size .......................... 5
+0:   test_weighted_split_names ....................... None
+0:   test_weighted_split_paths ....................... None
+0:   test_weighted_split_paths_path .................. None
+0:   test_weighted_split_splits ...................... None
+0:   test_weighted_split_weights ..................... None
+0:   tile_factor ..................................... 1
+0:   titles_data_path ................................ None
+0:   tokenizer_name_or_path .......................... None
+0:   tokenizer_type .................................. GPT2BPETokenizer
+0:   train_iters ..................................... None
+0:   train_samples ................................... 73242187
+0:   train_tokens .................................... None
+0:   train_weighted_split_paths ...................... None
+0:   train_weighted_split_paths_path ................. None
+0:   universal_checkpoint ............................ False
+0:   use_bnb_optimizer ............................... False
+0:   use_checkpoint_lr_scheduler ..................... False
+0:   use_contiguous_buffers_in_ddp ................... False
+0:   use_cpu_initialization .......................... None
+0:   use_one_sent_docs ............................... False
+0:   use_pin_memory .................................. False
+0:   valid_num_workers ............................... 2
+0:   valid_weighted_split_names ...................... None
+0:   valid_weighted_split_paths ...................... None
+0:   valid_weighted_split_paths_path ................. None
+0:   valid_weighted_split_splits ..................... None
+0:   valid_weighted_split_weights .................... None
+0:   virtual_pipeline_model_parallel_size ............ None
+0:   vocab_extra_ids ................................. 0
+0:   vocab_file ...................................... /scratch/project_462000119/sampo/gpt-hf-settings-no-tp-pp-3/gpt2-vocab.json
+0:   weight_decay .................................... 0.1
+0:   world_size ...................................... 8
+0:   zero_allgather_bucket_size ...................... 0.0
+0:   zero_contigious_gradients ....................... False
+0:   zero_reduce_bucket_size ......................... 0.0
+0:   zero_reduce_scatter ............................. False
+0:   zero_stage ...................................... 1.0
+0: -------------------- end of arguments ---------------------
+0: will use batch size rampup starting from global batch size 128 to global batch size 512 with batch size increments 128 over 2000000 samples.
+0: > building GPT2BPETokenizer tokenizer ...
+0:  > padded vocab (size: 50257) with 47 dummy tokens (new size: 50304)
+0: > initializing torch distributed ...
+0: [2022-10-19 23:59:10,784] [INFO] [comm.py:633:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+0: > setting tensorboard ...
+0: > initializing tensor model parallel with size 1
+0: > initializing pipeline model parallel with size 1
+0: > setting random seeds to 1234 ...
+0: > initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+0: > compiling dataset index builder ...
+0: make: Entering directory '/pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/data'
+0: make: Nothing to be done for 'default'.
+0: make: Leaving directory '/pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/data'
+0: >>> done with dataset index builder. Compilation time: 0.043 seconds
+0: > compiling and loading fused kernels ...
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax.cpp -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_hip.cpp [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_hip.h [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_cuda.cu -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_hip.hip [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_hip.h [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax_hip.h [skipped, already hipified]
+0: Total number of unsupported CUDA function calls: 0
+0: 
+0: 
+0: Total number of replaced kernel launches: 87
+0: Detected CUDA files, patching ldflags
+0: Emitting ninja build file /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/build/build.ninja...
+0: Building extension module scaled_upper_triang_masked_softmax_cuda...
+0: Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+0: ninja: no work to do.
+0: Loading extension module scaled_upper_triang_masked_softmax_cuda...
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax.cpp -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax_hip.cpp [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax_cuda.cu -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax_hip.hip [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_hip.h [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax_hip.h [skipped, already hipified]
+0: Total number of unsupported CUDA function calls: 0
+0: 
+0: 
+0: Total number of replaced kernel launches: 63
+0: Detected CUDA files, patching ldflags
+0: Emitting ninja build file /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/build/build.ninja...
+0: Building extension module scaled_masked_softmax_cuda...
+0: Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+0: ninja: no work to do.
+0: Loading extension module scaled_masked_softmax_cuda...
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/layer_norm_cuda.cpp -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/layer_norm_cuda.cpp [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/layer_norm_cuda_kernel.cu -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/layer_norm_hip_kernel.hip [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/type_shim.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/compat.h [skipped, no changes]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_upper_triang_masked_softmax_hip.h [skipped, already hipified]
+0: /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax.h -> /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/scaled_masked_softmax_hip.h [skipped, already hipified]
+0: Total number of unsupported CUDA function calls: 0
+0: 
+0: 
+0: Total number of replaced kernel launches: 67
+0: Detected CUDA files, patching ldflags
+0: Emitting ninja build file /pfs/lustrep4/projappl/project_462000119/nouatazi/Megatron-DeepSpeed-orig/megatron/fused_kernels/build/build.ninja...
+0: Building extension module fused_mix_prec_layer_norm_cuda...
+0: Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+0: [1/1] c++ layer_norm_hip_kernel.cuda.o layer_norm_cuda.o -shared -L/pfs/lustrep4/users/nouatazi/projects/venv/lib/python3.9/site-packages/torch/lib -lc10 -lc10_hip -ltorch_cpu -ltorch_hip -ltorch -ltorch_python -L/opt/rocm-5.0.2/lib -lamdhip64 -o fused_mix_prec_layer_norm_cuda.so
+0: Loading extension module fused_mix_prec_layer_norm_cuda...
+0: >>> done with compiling and loading fused kernels. Compilation time: 4.187 seconds
+0: time to initialize megatron (seconds): 35.952
+0: [after megatron is initialized] datetime: 2022-10-19 23:59:15 
+0: building GPT model ...
+0: [2022-10-19 23:59:15,995] [INFO] [utils.py:827:see_memory_usage] Before Building Model
+0: [2022-10-19 23:59:15,996] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+0: [2022-10-19 23:59:15,997] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 188.93 GB, percent = 37.5%
+0: [2022-10-19 23:59:18,551] [INFO] [utils.py:827:see_memory_usage] After Building Model
+0: [2022-10-19 23:59:18,552] [INFO] [utils.py:828:see_memory_usage] MA 0.68 GB         Max_MA 0.68 GB         CA 0.73 GB         Max_CA 1 GB 
+0: [2022-10-19 23:59:18,552] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 189.53 GB, percent = 37.7%
+0: setting training iterations to 148693
+0: > learning rate decay style: cosine
+0: WARNING: could not find the metadata file checkpoints/1814186/latest_checkpointed_iteration.txt 
+0:     will not load any checkpoints and will start from random
+0: time (ms) | load-checkpoint: 0.27
+0: estimated model parameters: 0.353824768
+0: estimated model parameters without embeddings: 0.302313472
+0: [after model, optimizer, and learning rate scheduler are built] datetime: 2022-10-19 23:59:18 
+0: > building train, validation, and test datasets ...
+0:  > datasets target sizes (minimum size):
+0:     train:      73242187
+0:     validation: 76134400
+0:     test:       51200
+0: > building train, validation, and test datasets for GPT ...
+0:  > building dataset index ...
+0:     reading sizes...
+0:     reading pointers...
+0:     reading document index...
+0:     creating numpy buffer of mmap...
+0:     creating memory view of numpy buffer...
+0:  > finished creating indexed dataset in 0.007820 seconds
+0:     number of documents: 17103059
+0:  > dataset split:
+0:     train:
+0:      document indices in [0, 16230803) total of 16230803 documents
+0:     validation:
+0:      document indices in [16230803, 17085956) total of 855153 documents
+0:     test:
+0:      document indices in [17085956, 17103059) total of 17103 documents
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_train_indexmap_73242187ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.043 seconds
+0:     total number of samples: 75778606
+0:     total number of epochs: 10
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_valid_indexmap_76134400ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.018 seconds
+0:     total number of samples: 76299323
+0:     total number of epochs: 178
+0:  > loading doc-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_doc_idx.npy
+0:  > loading sample-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_sample_idx.npy
+0:  > loading shuffle-idx mapping from /project/project_462000119/nouatazi/datablations/stability_study/data/owt2_test_indexmap_51200ns_2048sl_1234s_shuffle_idx.npy
+0:     loaded indexed file in 0.009 seconds
+0:     total number of samples: 51511
+0:     total number of epochs: 6
+0: > finished creating GPT datasets ...
+0: [after dataloaders are built] datetime: 2022-10-19 23:59:21 
+0: done with setup ...
+0: time (ms) | model-and-optimizer-setup: 2809.23 | train/valid/test-data-iterators-setup: 2748.38training ...
+0: 
+0: Number of parameters: [tensor rank - pipeline rank] w/ and w/o embeddings:
+0: [000-000] 0.3538B / 0.3023B
+0: [before the start of training step] datetime: 2022-10-19 23:59:21 
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 100 | lm loss value: 9.595978E+00 | lm loss PPL: 1.470551E+04 | 
+0: -----------------------------------------------------------------------------------------
+0: [Rank 0] (after 200 iterations) memory (MB) | allocated: 6777.4267578125 | max allocated: 17978.2236328125 | reserved: 27540.0 | max reserved: 27540.0
+0:  iteration      200/  148693 | consumed samples:        25600 | consumed tokens:     52428800 | elapsed time per iteration (s): 3.83 | learning rate: 3.880E-05 | global batch size:   128 | lm loss: 9.392835E+00 | loss scale: 262144.0 | grad norm: 1.677 | number of skipped iterations:  15 | number of nan iterations:   0 | samples per second: 33.418 | TFLOPs: 30.20 |
+0: time (ms) | forward-compute: 1482.79 | backward-compute: 2162.26 | backward-params-all-reduce: 35.33 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.17 | optimizer-unscale-and-check-inf: 5.92 | optimizer-clip-main-grad: 8.44 | optimizer-copy-main-to-model-params: 3.09 | optimizer: 39.93 | batch-generator: 53.85
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 200 | lm loss value: 7.707579E+00 | lm loss PPL: 2.225148E+03 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 300 | lm loss value: 6.903625E+00 | lm loss PPL: 9.958787E+02 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      400/  148693 | consumed samples:        51200 | consumed tokens:    104857600 | elapsed time per iteration (s): 4.20 | learning rate: 8.053E-05 | global batch size:   128 | lm loss: 6.932479E+00 | loss scale: 131072.0 | grad norm: 0.472 | number of skipped iterations:   1 | number of nan iterations:   0 | samples per second: 30.496 | TFLOPs: 27.56 |
+0: time (ms) | forward-compute: 1866.02 | backward-compute: 2162.65 | backward-params-all-reduce: 35.93 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.17 | optimizer-unscale-and-check-inf: 5.37 | optimizer-clip-main-grad: 4.88 | optimizer-copy-main-to-model-params: 3.32 | optimizer: 37.35 | batch-generator: 86.64
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 400 | lm loss value: 6.466767E+00 | lm loss PPL: 6.434004E+02 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 500 | lm loss value: 6.216655E+00 | lm loss PPL: 5.010246E+02 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      600/  148693 | consumed samples:        76800 | consumed tokens:    157286400 | elapsed time per iteration (s): 4.20 | learning rate: 1.225E-04 | global batch size:   128 | lm loss: 6.260127E+00 | loss scale: 131072.0 | grad norm: 0.822 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 30.446 | TFLOPs: 27.52 |
+0: time (ms) | forward-compute: 1869.25 | backward-compute: 2163.14 | backward-params-all-reduce: 36.03 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.18 | optimizer-unscale-and-check-inf: 5.38 | optimizer-clip-main-grad: 4.18 | optimizer-copy-main-to-model-params: 3.34 | optimizer: 36.78 | batch-generator: 85.99
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 600 | lm loss value: 6.070205E+00 | lm loss PPL: 4.327693E+02 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 700 | lm loss value: 5.965537E+00 | lm loss PPL: 3.897623E+02 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration      800/  148693 | consumed samples:       102400 | consumed tokens:    209715200 | elapsed time per iteration (s): 4.20 | learning rate: 1.644E-04 | global batch size:   128 | lm loss: 6.044261E+00 | loss scale: 131072.0 | grad norm: 0.550 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 30.450 | TFLOPs: 27.52 |
+0: time (ms) | forward-compute: 1871.99 | backward-compute: 2163.67 | backward-params-all-reduce: 35.86 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.17 | optimizer-unscale-and-check-inf: 5.39 | optimizer-clip-main-grad: 4.16 | optimizer-copy-main-to-model-params: 3.34 | optimizer: 36.77 | batch-generator: 82.90
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 800 | lm loss value: 5.917706E+00 | lm loss PPL: 3.715584E+02 | 
+0: -----------------------------------------------------------------------------------------
+0: -----------------------------------------------------------------------------------------
+0: valid loss at iteration 900 | lm loss value: 5.865830E+00 | lm loss PPL: 3.527750E+02 | 
+0: -----------------------------------------------------------------------------------------
+0:  iteration     1000/  148693 | consumed samples:       128000 | consumed tokens:    262144000 | elapsed time per iteration (s): 4.20 | learning rate: 2.064E-04 | global batch size:   128 | lm loss: 5.948535E+00 | loss scale: 131072.0 | grad norm: 0.479 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 30.461 | TFLOPs: 27.53 |
+0: time (ms) | forward-compute: 1870.36 | backward-compute: 2162.65 | backward-params-all-reduce: 36.06 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.18 | optimizer-unscale-and-check-inf: 5.40 | optimizer-clip-main-grad: 4.17 | optimizer-copy-main-to-model-params: 3.37 | optimizer: 36.89 | batch-generator: 90.07
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1000 | lm loss value: 5.822178E+00 | lm loss PPL: 3.377069E+02 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1100 | lm loss value: 5.822142E+00 | lm loss PPL: 3.376947E+02 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     1200/  148693 | consumed samples:       153600 | consumed tokens:    314572800 | elapsed time per iteration (s): 4.20 | learning rate: 2.481E-04 | global batch size:   128 | lm loss: 5.968990E+00 | loss scale: 65536.0 | grad norm: 0.781 | number of skipped iterations:   1 | number of nan iterations:   0 | samples per second: 30.477 | TFLOPs: 27.54 |
+0: time (ms) | forward-compute: 1866.89 | backward-compute: 2158.91 | backward-params-all-reduce: 36.02 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.27 | optimizer-unscale-and-check-inf: 5.43 | optimizer-clip-main-grad: 4.20 | optimizer-copy-main-to-model-params: 3.33 | optimizer: 36.90 | batch-generator: 85.44
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1200 | lm loss value: 5.951905E+00 | lm loss PPL: 3.844850E+02 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1300 | lm loss value: 6.120555E+00 | lm loss PPL: 4.551174E+02 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     1400/  148693 | consumed samples:       179200 | consumed tokens:    367001600 | elapsed time per iteration (s): 4.19 | learning rate: 2.900E-04 | global batch size:   128 | lm loss: 6.149530E+00 | loss scale: 65536.0 | grad norm: 0.870 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 30.535 | TFLOPs: 27.60 |
+0: time (ms) | forward-compute: 1862.39 | backward-compute: 2154.28 | backward-params-all-reduce: 35.61 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.19 | optimizer-unscale-and-check-inf: 5.39 | optimizer-clip-main-grad: 4.38 | optimizer-copy-main-to-model-params: 3.35 | optimizer: 37.12 | batch-generator: 83.14
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1400 | lm loss value: 6.180975E+00 | lm loss PPL: 4.834633E+02 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1500 | lm loss value: 6.561748E+00 | lm loss PPL: 7.075074E+02 | 
+0: ------------------------------------------------------------------------------------------
+0: saving checkpoint at iteration    1500 to checkpoints/1814186
+0:   successfully saved checkpoint at iteration    1500 to checkpoints/1814186
+0: time (ms) | save-checkpoint: 5048.53
+0:  iteration     1600/  148693 | consumed samples:       204800 | consumed tokens:    419430400 | elapsed time per iteration (s): 4.11 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 1.107330E+01 | loss scale: 1.0 | grad norm: 0.000 | number of skipped iterations:  81 | number of nan iterations:  81 | samples per second: 31.159 | TFLOPs: 28.16 |
+0: time (ms) | forward-compute: 1862.10 | backward-compute: 2062.61 | backward-params-all-reduce: 26.31 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.19 | optimizer-unscale-and-check-inf: 6.98 | optimizer-clip-main-grad: 2.54 | optimizer-copy-main-to-model-params: 1.99 | optimizer: 27.13 | batch-generator: 82.18
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1600 | lm loss value: 1.717371E+01 | lm loss PPL: 2.873740E+07 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1700 | lm loss value: 1.714347E+01 | lm loss PPL: 2.788130E+07 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     1800/  148693 | consumed samples:       230400 | consumed tokens:    471859200 | elapsed time per iteration (s): 4.05 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 1.569901E+01 | loss scale: 1.0 | grad norm: 0.000 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 31.569 | TFLOPs: 28.53 |
+0: time (ms) | forward-compute: 1860.11 | backward-compute: 2032.66 | backward-params-all-reduce: 23.18 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.18 | optimizer-unscale-and-check-inf: 5.40 | optimizer-clip-main-grad: 4.20 | optimizer-copy-main-to-model-params: 3.45 | optimizer: 37.00 | batch-generator: 84.31
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1800 | lm loss value: 1.703292E+01 | lm loss PPL: 2.496334E+07 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 1900 | lm loss value: 1.694384E+01 | lm loss PPL: 2.283584E+07 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2000/  148693 | consumed samples:       256000 | consumed tokens:    524288000 | elapsed time per iteration (s): 4.05 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 1.557120E+01 | loss scale: 1.0 | grad norm: 0.000 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 31.572 | TFLOPs: 28.53 |
+0: time (ms) | forward-compute: 1860.74 | backward-compute: 2032.63 | backward-params-all-reduce: 23.04 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.19 | optimizer-unscale-and-check-inf: 5.42 | optimizer-clip-main-grad: 4.17 | optimizer-copy-main-to-model-params: 3.35 | optimizer: 36.85 | batch-generator: 82.78
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2000 | lm loss value: 1.677871E+01 | lm loss PPL: 1.935977E+07 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2100 | lm loss value: 1.667966E+01 | lm loss PPL: 1.753405E+07 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2200/  148693 | consumed samples:       281600 | consumed tokens:    576716800 | elapsed time per iteration (s): 4.06 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 1.541589E+01 | loss scale: 1.0 | grad norm: 0.000 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 31.564 | TFLOPs: 28.53 |
+0: time (ms) | forward-compute: 1860.84 | backward-compute: 2032.23 | backward-params-all-reduce: 23.30 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.20 | optimizer-unscale-and-check-inf: 5.40 | optimizer-clip-main-grad: 4.16 | optimizer-copy-main-to-model-params: 3.35 | optimizer: 36.84 | batch-generator: 85.08
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2200 | lm loss value: 1.658412E+01 | lm loss PPL: 1.593652E+07 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2300 | lm loss value: 1.645318E+01 | lm loss PPL: 1.398059E+07 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2400/  148693 | consumed samples:       307200 | consumed tokens:    629145600 | elapsed time per iteration (s): 4.06 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 1.526343E+01 | loss scale: 1.0 | grad norm: 0.000 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 31.560 | TFLOPs: 28.52 |
+0: time (ms) | forward-compute: 1862.99 | backward-compute: 2033.35 | backward-params-all-reduce: 23.01 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.18 | optimizer-unscale-and-check-inf: 5.39 | optimizer-clip-main-grad: 4.22 | optimizer-copy-main-to-model-params: 3.34 | optimizer: 36.85 | batch-generator: 86.71
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2400 | lm loss value: 1.633134E+01 | lm loss PPL: 1.237693E+07 | 
+0: ------------------------------------------------------------------------------------------
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2500 | lm loss value: 1.627214E+01 | lm loss PPL: 1.166541E+07 | 
+0: ------------------------------------------------------------------------------------------
+0:  iteration     2600/  148693 | consumed samples:       332800 | consumed tokens:    681574400 | elapsed time per iteration (s): 4.05 | learning rate: 3.000E-04 | global batch size:   128 | lm loss: 1.567650E+01 | loss scale: 2.0 | grad norm: 2.471 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 31.572 | TFLOPs: 28.53 |
+0: time (ms) | forward-compute: 1857.35 | backward-compute: 2032.31 | backward-params-all-reduce: 23.25 | backward-embedding-all-reduce: 0.03 | optimizer-copy-to-main-grad: 3.19 | optimizer-unscale-and-check-inf: 5.40 | optimizer-clip-main-grad: 5.98 | optimizer-copy-main-to-model-params: 3.35 | optimizer: 38.67 | batch-generator: 78.96
+0: ------------------------------------------------------------------------------------------
+0: valid loss at iteration 2600 | lm loss value: 2.020264E+01 | lm loss PPL: 4.851652E+08 | 
+0: ------------------------------------------------------------------------------------------
