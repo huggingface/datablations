@@ -1,13 +1,14 @@
 from datasets import load_dataset
 import argparse
-from text_dedup.exact_dedup import PythonSuffixArrayDeduplicator
+from text_dedup.exact_dedup import PythonSuffixArrayDeduplicator, GoogleSuffixArrayDeduplicator
 
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', type=str, required=True)
     parser.add_argument('--subset', type=str, default=None)
-    parser.add_argument('--path_on_disk', type=str, required=False)
+    parser.add_argument('--path_on_disk', type=str, required=True)
+    parser.add_argument('--cache_dir', type=str, required=True)
     return parser.parse_args()
 
 
@@ -21,7 +22,7 @@ if __name__ == "__main__":
     dataset = load_dataset(args.name, args.subset, use_auth_token=True, split="train")
     corpus = generator_from_dataset(dataset)
 
-    deduplicator = PythonSuffixArrayDeduplicator(k=10, merge_strategy='overlapping')
+    deduplicator = GoogleSuffixArrayDeduplicator(k=10, merge_strategy='overlapping', google_repo_path=args.path_on_disk, cache_dir=args.cache_dir)
     slices = deduplicator.fit_predict(corpus)
     for sentence, intervals in zip(corpus, slices):
         print(sentence)
