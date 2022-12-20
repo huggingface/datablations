@@ -1,8 +1,12 @@
 import argparse
-from os import cpu_count
+import os
 from typing import List, Dict
+import subprocess
 
-from datasets import load_dataset, Dataset
+import numpy as np
+import pyarrow as pa
+from datasets import load_dataset, Dataset, concatenate_datasets
+from tqdm import tqdm
 
 
 def get_args():
@@ -11,8 +15,10 @@ def get_args():
                         help="Path to the dataset you're using on the HF hub. Pass e.g. `csv` or `json` and `data_files=path_on_disk` to load something locally")
     parser.add_argument('--subset', type=str, default=None, help="Subset of the dataset you're using, if needed")
     parser.add_argument('--data_files', type=str, default=None, help="Path to the dataset on disk if using local files")
-    parser.add_argument('--ratio', type=float, help="Subsampling ratio", required=True)
+    parser.add_argument('--ratios', nargs='+', type=float, help="Subsampling ratios", required=True)
+    parser.add_argument('--names', nargs='+', type=str, help="Names for the produced subsets", required=False)
     parser.add_argument('--pre_shuffle', action="store_true", help="Whether to shuffle the dataset in advance")
+    parser.add_argument('--shuffle_seed', type=int, default=0, help="Shuffling seed")
     return parser.parse_args()
 
 
@@ -22,62 +28,58 @@ def get_size_per_example(texts: List[str]) -> Dict:
     return examples
 
 
-def linear_search_with_best_guess(dataset, ratio):
-    """
-    :param dataset: The HF dataset to split
-    :param ratio: The ratio of bytes we want to keep
-    :return: The cutoff point, rounded down
-    """
-    total_size = sum(dataset["bytes_len"])
-    target_size = total_size * ratio
-    current_index = int(round(len(dataset) * ratio))
-    current_size = sum(dataset.select(range(current_index))["bytes_len"])
-
-    if current_size > target_size:
-        current_index -= 1
-        while True:
-            current_size -= dataset[current_index]["bytes_len"]
-            if current_size < target_size:
-                break
-            current_index -= 1
-
-    else:
-        while True:
-            current_size += dataset[current_index]["bytes_len"]
-            if current_size > target_size:
-                break
-            current_index += 1
-
-    below = sum(dataset.select(range(current_index))["bytes_len"])
-    above = below + dataset[current_index]["bytes_len"]
-    assert below < target_size < above, f"Sizes {below}, {target_size}, {above} not ordered, bad splitting"
-
-    return current_index
+def get_total_byte_size(dataset):
+    return pa.compute.sum(dataset.data["bytes_len"]).as_py()
 
 
-def output_path(args):
+def output_path(args, ratio, name):
+    if name is None:
+        name = f"{ratio}_subsample"
     if args.data_files is not None:
         # assumes there's an extension
         path = args.data_files.split(".")[:-1]
-        path += f"_{args.ratio}_subsample"
+        path += f"_{name}"
         path += ".jsonl"
     else:
-        path = f"{args.name}_{args.subset}_{args.ratio}_subsample.jsonl"
-    return path
+        path = f"{args.name}_{args.subset}_{name}.jsonl"
+    return os.path.abspath(path)
 
 
 if __name__ == "__main__":
     args = get_args()
-    dataset = load_dataset(args.name, args.subset, data_files=args.data_files, num_proc=cpu_count(), split="train")
+    dataset = load_dataset(args.name, args.subset, data_files=args.data_files, num_proc=os.cpu_count(), split="train")
+
     dataset = dataset.map(
         get_size_per_example,
         batched=True,
-        num_proc=cpu_count(),
+        num_proc=os.cpu_count(),
         batch_size=1024,
         input_columns=["text"],
     )
+
     if args.pre_shuffle:
-        dataset = dataset.shuffle()
-    cutoff_point = linear_search_with_best_guess(dataset, args.ratio)
-    dataset = dataset.select(range(cutoff_point))
-    dataset.to_json(output_path(args), num_proc=cpu_count())
+        dataset = dataset.shuffle(args.shuffle_seed)
+        dataset = dataset.flatten_indices(num_proc=os.cpu_count())
+
+    cumsum_sizes = pa.compute.cumulative_sum(dataset.data["bytes_len"])
+    cumsum_ds = Dataset(pa.Table.from_arrays([cumsum_sizes], names=["cumsum_sizes"]))
+    dataset = concatenate_datasets([dataset, cumsum_ds], axis=1)
+    total_size = dataset[-1]["cumsum_sizes"]
+
+    dataset = dataset.with_format("numpy")
+
+    if args.names is None:
+        args.names = [None] * len(args.ratios)
+    ratios_and_names = sorted(list(zip(args.ratios, args.names)), key=lambda x: x[0], reverse=True)
+    base_file = args.data_files
+    assert dataset._indices is None
+
+    for ratio, name in tqdm(ratios_and_names):
+        cutoff_point = np.searchsorted(dataset["cumsum_sizes"], total_size * ratio)
+        if base_file is None:
+            subset = dataset.select(range(cutoff_point)).remove_columns(["bytes_len", "cumsum_sizes"])
+            assert subset._indices is None
+            subset.to_json(output_path(args, ratio, name), num_proc=64, batch_size=100_000)
+            base_file = output_path(args, ratio, name)
+        else:
+            subprocess.run(f"head -{cutoff_point} {base_file} > {output_path(args, ratio, name)}", shell=True)
