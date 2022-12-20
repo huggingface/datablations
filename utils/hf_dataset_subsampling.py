@@ -48,6 +48,12 @@ def output_path(args, ratio, name):
 
 if __name__ == "__main__":
     args = get_args()
+
+    if args.names is None:
+        args.names = [None] * len(args.ratios)
+    else:
+        assert len(args.names) == len(args.ratios)
+
     dataset = load_dataset(args.name, args.subset, data_files=args.data_files, num_proc=os.cpu_count(), split="train")
 
     dataset = dataset.map(
@@ -69,11 +75,6 @@ if __name__ == "__main__":
     total_size = dataset[-1]["cumsum_sizes"]
 
     dataset = dataset.with_format("numpy")
-
-    if args.names is None:
-        args.names = [None] * len(args.ratios)
-    else:
-        assert len(args.names) == len(args.ratios)
     ratios_and_names = sorted(list(zip(args.ratios, args.names)), key=lambda x: x[0], reverse=True)
     base_file = args.data_files
     assert dataset._indices is None
