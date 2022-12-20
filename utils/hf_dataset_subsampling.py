@@ -72,6 +72,8 @@ if __name__ == "__main__":
 
     if args.names is None:
         args.names = [None] * len(args.ratios)
+    else:
+        assert len(args.names) == len(args.ratios)
     ratios_and_names = sorted(list(zip(args.ratios, args.names)), key=lambda x: x[0], reverse=True)
     base_file = args.data_files
     assert dataset._indices is None
