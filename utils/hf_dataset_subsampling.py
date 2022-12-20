@@ -58,6 +58,7 @@ if __name__ == "__main__":
     )
 
     if args.pre_shuffle:
+        # this is going to be incredibly slow on large datasets
         dataset = dataset.shuffle(args.shuffle_seed)
         dataset = dataset.flatten_indices(num_proc=os.cpu_count())
 
