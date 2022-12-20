@@ -2,6 +2,7 @@ import argparse
 import os
 from typing import List, Dict
 import subprocess
+import shlex
 
 import numpy as np
 import pyarrow as pa
@@ -83,4 +84,5 @@ if __name__ == "__main__":
             subset.to_json(output_path(args, ratio, name), num_proc=64, batch_size=100_000)
             base_file = output_path(args, ratio, name)
         else:
-            subprocess.run(f"head -{cutoff_point} {base_file} > {output_path(args, ratio, name)}", shell=True)
+            subprocess.run(shlex.split(f"head -{cutoff_point} {base_file}"),
+                           stdout=open(output_path(args, ratio, name), "w"), check=True)
