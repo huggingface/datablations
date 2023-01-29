@@ -62,10 +62,6 @@ def get_url(row, dataset_name):
     return None
 
 
-def get_cluster(row, repetitions):
-    return [set(repetitions[rep]) for rep in row["repetitions"]]
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -75,56 +71,78 @@ if __name__ == "__main__":
         type=str,
         required=True,
     )
+    parser.add_argument(
+        "--base_dir",
+        "-b",
+        type=str,
+        required=True,
+    )
     args = parser.parse_args()
     dataset_name = args.dataset_name
+    base_dir = args.base_dir
 
     HUGGINGFACE_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
 
     print("Loading", dataset_name)
     dataset = load_from_disk("/home/piktus_huggingface_co/lumi/preprocessed_data/{}".format(dataset_name))["train"]
+    dataset_raw = load_from_disk("/home/piktus_huggingface_co/lumi/{}".format(dataset_name))["train"]
     print("Done loading", dataset_name)
 
-    base_dir = "/mnt/disks/looking_glass_storage/lumi/dedup/"
-    data_path = base_dir + "/{ds}/{ds}.train".format(ds=dataset_name)
-    byterange = base_dir + "/{ds}/{ds}.train.byterange".format(ds=dataset_name)
+    data_path = base_dir + "/{ds}.train".format(ds=dataset_name)
+    byterange = base_dir + "/{ds}.train.byterange".format(ds=dataset_name)
     pairs = get_pairs(byterange)
     data = open(data_path, "rb").read()
     byte_array = get_bytes(pairs, data)
-    pos2id = pickle.load(open(base_dir + "/{ds}/{ds}.train.pos2id.pkl".format(ds=dataset_name), "rb"))
+    pos2id = pickle.load(open(base_dir + "/{ds}.train.pos2id.pkl".format(ds=dataset_name), "rb"))
     pos2id_list = sorted(pos2id.keys())
 
     doc_pairs = defaultdict(list)
     doc_bytes = defaultdict(list)
     dup_ratios = defaultdict(float)
-    repetitions = defaultdict(list)
+    repetitions = defaultdict(set)
+    clusters = defaultdict(set)
 
     print("Calculating repetitions")
     for (l, r), b in tqdm(zip(pairs, byte_array)):
         i = get_doc_id(l, pos2id, pos2id_list)
         doc_pairs[i].append((l, r))
         doc_bytes[i].append(b)
-        repetitions[b].append(i)
+        repetitions[b].add(i)
+
+    print(
+        "Singleton pairs:",
+        sum(1 for i in doc_pairs.keys() if len(doc_pairs[i]) == 1)
+    )
 
     print("Calculating ratios")
     for i, pairs in tqdm(doc_pairs.items()):
         dup_len = sum([r - l for l, r in pairs])
         dup_ratios[i] = dup_len / len(dataset[i]["text"])
 
+    print("Calculating clusters")
+    for i, _ in tqdm(doc_pairs.items()):
+        c = set()
+        for rep in doc_bytes[i]:
+            c |= repetitions[rep]
+        clusters[i] = c
+
     def add_duplication_info(example, idx):
+        example["text"] = dataset_raw[idx]["text"]
+        example["text_length"] = len(example["text"])
         example["url"] = get_url(example, dataset_name)
         example["domain"] = example["url"].split("/")[2] if example["url"] is not None else None
-        example["perplexity"] = example["meta"]["perplexity_score"]
         example["dup_ratio"] = dup_ratios[idx]
         example["pairs"] = doc_pairs[idx]
         example["repetitions"] = doc_bytes[idx]
-        example["cluster"] = get_cluster(example, repetitions)
-
+        example["cluster"] = clusters[idx]
         return example
 
-    dataset = dataset.map(add_duplication_info, num_proc=cpu_count(), with_indices=True, new_fingerprint="13")
-    dataset.remove_columns("meta")
+    print("Mapping")
+    dataset = dataset.map(add_duplication_info, num_proc=cpu_count() - 16, with_indices=True, new_fingerprint="13")
+    dataset.save_to_disk("/home/piktus_huggingface_co/lumi/preprocessed_data/{}-clusters".format(dataset_name))
     dataset.push_to_hub(
-        "datablations/{}".format(dataset_name),
+        "datablations/{}-clusters".format(dataset_name),
         private=True,
         token=os.environ.get("HUGGINGFACE_TOKEN"),
     )
+
