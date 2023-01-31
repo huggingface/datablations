@@ -94,8 +94,8 @@ if __name__ == "__main__":
     pos2id_list = sorted(pos2id.keys())
 
     doc_pairs = defaultdict(list)
+    dup_len = defaultdict(int)
     doc_bytes = defaultdict(list)
-    dup_ratios = defaultdict(float)
     repetitions = defaultdict(set)
     clusters = defaultdict(set)
     included_docs = set()
@@ -110,8 +110,8 @@ if __name__ == "__main__":
     print("Calculating repetitions")
     for (l, r), b in tqdm(zip(pairs, byte_array)):
         i = get_doc_id(l, pos2id, pos2id_list)
-        included_docs.add(i)
         doc_pairs[i].append((l, r))
+        dup_len[i] += (r - l)
         doc_bytes[i].append(b)
         repetitions[b].add(i)
 
@@ -120,10 +120,9 @@ if __name__ == "__main__":
         sum(1 for i in doc_pairs.keys() if len(doc_pairs[i]) == 1)
     )
 
-    print("Calculating ratios")
-    for i, pairs in tqdm(doc_pairs.items()):
-        dup_len = sum([r - l for l, r in pairs])
-        dup_ratios[i] = dup_len / len(dataset[i]["text"])
+    for idx in pos2id.values():
+        included_docs.add(idx)
+    print("Num included", len(included_docs))
 
     print("Calculating clusters")
     for i, _ in tqdm(doc_pairs.items()):
@@ -141,10 +140,11 @@ if __name__ == "__main__":
 
     def add_duplication_info(example, idx):
         example["text"] = dataset_raw[idx]["text"]
-        example["text_length"] = len(example["text"])
+        text_length = len(example["text"])
+        example["text_length"] = text_length
         example["url"] = get_url(example, dataset_name)
         example["domain"] = example["url"].split("/")[2] if example["url"] is not None else None
-        example["dup_ratio"] = dup_ratios[idx]
+        example["dup_ratio"] = dup_len[idx] / text_length
         example["pairs"] = doc_pairs[idx]
         example["repetitions"] = doc_bytes[idx]
         example["included_in_dedup"] = idx in included_docs
