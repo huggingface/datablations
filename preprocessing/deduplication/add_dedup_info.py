@@ -132,6 +132,12 @@ if __name__ == "__main__":
             c |= repetitions[rep]
         clusters[i] = c
 
+    # cleanup
+    del byterange
+    del data
+    del pos2id
+    del pos2id_list
+    del pairs
 
     def add_duplication_info(example, idx):
         example["text"] = dataset_raw[idx]["text"]
