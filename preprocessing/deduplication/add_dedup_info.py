@@ -29,7 +29,7 @@ def get_pairs(byterange):
     return pairs
 
 
-def get_bytes(pairs, data, offset=0):
+def get_bytes(pairs, data):
     """
     Return bytes constituring the duplicated substring. There seems to be something off here, see:
     https://github.com/google-research/deduplicate-text-datasets/issues/24
@@ -37,9 +37,7 @@ def get_bytes(pairs, data, offset=0):
     print("Getting bytes")
     byte_array = []
     for left, right in tqdm(pairs):
-        if left + offset >= right - offset:
-            raise ValueError
-        byte_array.append(data[left + offset : right - offset])
+        byte_array.append(data[left:right])
 
     print("byte_array size", len(byte_array))
     return byte_array
@@ -92,7 +90,6 @@ if __name__ == "__main__":
     byterange = base_dir + "/{ds}.train.byterange".format(ds=dataset_name)
     pairs = get_pairs(byterange)
     data = open(data_path, "rb").read()
-    byte_array = get_bytes(pairs, data)
     pos2id = pickle.load(open(base_dir + "/{ds}.train.pos2id.pkl".format(ds=dataset_name), "rb"))
     pos2id_list = sorted(pos2id.keys())
 
@@ -101,10 +98,19 @@ if __name__ == "__main__":
     dup_ratios = defaultdict(float)
     repetitions = defaultdict(set)
     clusters = defaultdict(set)
+    included_docs = set()
+
+    print("Getting bytes")
+    byte_array = []
+    for left, right in tqdm(pairs):
+        byte_array.append(data[left:right])
+
+    print("byte_array size", len(byte_array))
 
     print("Calculating repetitions")
     for (l, r), b in tqdm(zip(pairs, byte_array)):
         i = get_doc_id(l, pos2id, pos2id_list)
+        included_docs.add(i)
         doc_pairs[i].append((l, r))
         doc_bytes[i].append(b)
         repetitions[b].add(i)
@@ -126,6 +132,7 @@ if __name__ == "__main__":
             c |= repetitions[rep]
         clusters[i] = c
 
+
     def add_duplication_info(example, idx):
         example["text"] = dataset_raw[idx]["text"]
         example["text_length"] = len(example["text"])
@@ -134,14 +141,15 @@ if __name__ == "__main__":
         example["dup_ratio"] = dup_ratios[idx]
         example["pairs"] = doc_pairs[idx]
         example["repetitions"] = doc_bytes[idx]
+        example["included_in_dedup"] = idx in included_docs
         example["cluster"] = clusters[idx]
         return example
 
     print("Mapping")
-    dataset = dataset.map(add_duplication_info, num_proc=cpu_count() - 16, with_indices=True, new_fingerprint="13")
-    dataset.save_to_disk("/home/piktus_huggingface_co/lumi/preprocessed_data/{}-clusters".format(dataset_name))
+    dataset = dataset.map(add_duplication_info, num_proc=max(1, cpu_count() - 32), with_indices=True, new_fingerprint="13")
+    dataset.save_to_disk("/home/piktus_huggingface_co/lumi/preprocessed_data/{}-dedup".format(dataset_name))
     dataset.push_to_hub(
-        "datablations/{}-clusters".format(dataset_name),
+        "datablations/{}-dedup".format(dataset_name),
         private=True,
         token=os.environ.get("HUGGINGFACE_TOKEN"),
     )
