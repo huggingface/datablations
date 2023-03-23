@@ -39,3 +39,10 @@ Instead of actually deduplicating, we're adding metadata to each datapoint which
 Following the logic described above, I create datasets like the following:
 - [ola13/small-c4-dedup](https://huggingface.co/datasets/ola13/small-c4-dedup)
 - [ola13/small-c4-repetitions](https://huggingface.co/datasets/ola13/small-c4-repetitions) - a dataset of duplicated strings, their respective `pairs` and `ids` of HF dataset datapoints containing a given duplication.
+
+
+
+# Sample multiquery query:
+```
+time ./target/debug/dedup_dataset count-occurrences-multi --data-file  /home/piktus_huggingface_co/lumi/dedup/oscar_025/oscar.train --query-file /home/piktus_huggingface_co/lumi/preprocessed_data/oscar_queries/queries_137974608.bin > test.out
+```
