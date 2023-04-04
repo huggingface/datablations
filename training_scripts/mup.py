@@ -61,7 +61,7 @@ model_name = "mup-200m-100m"
 
 from datasets import load_dataset
 datasets = load_dataset('datablations/c4-100m')
-!wget https://huggingface.co/datasets/allenai/c4/resolve/main/en/c4-validation.00000-of-00008.json.gz
+# wget https://huggingface.co/datasets/allenai/c4/resolve/main/en/c4-validation.00000-of-00008.json.gz
 val_dataset = load_dataset('json', data_files='c4-validation.00000-of-00008.json.gz')['train']
 # val_dataset = load_dataset('c4', 'en', split='validation[:10%]')
 datasets["validation"] = val_dataset
