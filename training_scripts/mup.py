@@ -26,10 +26,10 @@ Run tiny grid search at 64 hidden size (200M params) on init std 0.1 / default; 
 Then use those HPs found for 1B & 2b8 models
 """
 
-
 ### Cosine Annealing with Warmup from
 ### https://github.com/Lightning-Universe/lightning-bolts/blob/master/pl_bolts/optimizers/lr_scheduler.py
 
+from typing import List
 from torch import nn
 from torch.optim import Adam, Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
@@ -163,7 +163,7 @@ TARGET_CONFIG = {
         "num_attention_heads": 14,
         "num_layers": 26,
         "batch_size": 256,
-    }
+    },
     "2B8": {
         "hidden_size": 2560,
         "intermediate_size": 2560*4,
@@ -177,7 +177,7 @@ BASE_HIDDEN = 128
 BASE_INTERMEDIATE = 256
 BASE_NUM_ATTENTION_HEADS = 8
 LR = 1e-3 # MUP default LR
-INIT_RANGE = 0.02 # MUP default init range
+INIT_RANGE = 0.01 # MUP default init range
 
 CONFIG_TO_RUN = "200M" # MODIFY BASED ON DESIRED CONFIG
 RUN_OFFLINE = True
@@ -226,6 +226,11 @@ target_model.apply(target_model._init_weights)
 optimizer = MuAdamW(target_model.parameters(), lr=LR)
 
 
+import numpy as np
+model_parameters = filter(lambda p: p.requires_grad, target_model.parameters())
+params = sum([np.prod(p.size()) for p in model_parameters])
+print("Number of trainable parameters: ", params)
+
 """
 Training code
 Train billion parameter models on 100M tokens of C4
@@ -237,6 +242,7 @@ https://colab.research.google.com/github/huggingface/notebooks/blob/main/example
 model_name = "mup-200m-100m"
 
 from datasets import load_dataset
+# git clone https://huggingface.co/datasets/datablations/c4-100m
 datasets = load_dataset('datablations/c4-100m')
 # wget https://huggingface.co/datasets/allenai/c4/resolve/main/en/c4-validation.00000-of-00008.json.gz
 val_dataset = load_dataset('json', data_files='c4-validation.00000-of-00008.json.gz')['train']
@@ -282,23 +288,25 @@ scheduler = LinearWarmupCosineAnnealingLR(
     warmup_epochs=num_steps // 100, # 1% of training steps
     max_epochs=num_steps,
     eta_min=LR / 10, # Decay to 10% of LR
-)
 
+
+per_device_train_batch_size = 4
+gradient_accumulation_steps = BATCH_SIZE // per_device_train_batch_size
 
 training_args = TrainingArguments(
     model_name,
-    evaluation_strategy = "epoch",
+    evaluation_strategy="steps",
     weight_decay=0.01,
-    push_to_hub=RUN_OFFLINE,
-    per_device_train_batch_size=BATCH_SIZE,
-    warmup_ratio=0.01, # 10% of training steps
-    lr_scheduler_type="cosine",
+    push_to_hub=not(RUN_OFFLINE),
+    per_device_train_batch_size=per_device_train_batch_size,
+    num_train_epochs=1,
+    gradient_accumulation_steps=gradient_accumulation_steps,
 )
 
 trainer = Trainer(
     model=target_model,
     args=training_args,
-    train_dataset=lm_datasets["train"],
+    train_dataset=lm_datasets["train"], # .select(range(256)), # Testing
     eval_dataset=lm_datasets["validation"],
     optimizers=(optimizer, scheduler), # Use mup optimizer & cosine scheduler
 )
@@ -307,8 +315,12 @@ trainer.train()
 
 import math
 eval_results = trainer.evaluate()
+print(f"Loss: {eval_results['eval_loss']:.4f}")
 print(f"Perplexity: {math.exp(eval_results['eval_loss']):.4f}")
 
+import json
+with open(f"{model_name}.json", "w") as f:
+    json.dump(eval_results, f)
 
 if RUN_OFFLINE:
     trainer.save_model(model_name)
