@@ -29,6 +29,8 @@ Then use those HPs found for 1B & 2b8 models
 ### Cosine Annealing with Warmup from
 ### https://github.com/Lightning-Universe/lightning-bolts/blob/master/pl_bolts/optimizers/lr_scheduler.py
 
+import warnings
+import math
 from typing import List
 from torch import nn
 from torch.optim import Adam, Optimizer
@@ -150,19 +152,77 @@ from functools import partial
 
 
 TARGET_CONFIG = {
-    "200M": {
+    "test": {
         "hidden_size": 1024,
         "intermediate_size": 1024*4,
         "num_attention_heads": 32,
         "num_layers": 12,
         "batch_size": 256,
+        "per_device_train_batch_size": 4,
     },
+    "200M": { # 203668480
+        "hidden_size": 1024,
+        "intermediate_size": 1024*4,
+        "num_attention_heads": 32,
+        "num_layers": 12,
+        "batch_size": 256,
+        "per_device_train_batch_size": 4,
+    },
+    "800M": { # 709326848
+        "hidden_size": 1024*2,
+        "intermediate_size": 1024*4*2,
+        "num_attention_heads": 32*2,
+        "num_layers": 12,
+        "batch_size": 256,
+        "per_device_train_batch_size": 2,
+    },
+    "1B": { # 1516975104
+        "hidden_size": 1024*3,
+        "intermediate_size": 1024*4*3,
+        "num_attention_heads": 32*2,
+        "num_layers": 12,
+        "batch_size": 256,
+        "per_device_train_batch_size": 2,
+    },    
+    "2B": { # 1766073088
+        "hidden_size": int(1024*3.25),
+        "intermediate_size": int(1024*3.25)*4,
+        "num_attention_heads": 32*4,
+        "num_layers": 12,
+        "batch_size": 256,
+        "per_device_train_batch_size": 1,
+    }, 
+    "2B5": { # 2626613248
+        "hidden_size": int(1024*4),
+        "intermediate_size": int(1024*4)*4,
+        "num_attention_heads": 32*4,
+        "num_layers": 12,
+        "batch_size": 512,
+        "per_device_train_batch_size": 1,
+    },
+    "3B": { # 2951208704
+        "hidden_size": int(1024*4.25),
+        "intermediate_size": int(1024*4.25)*4,
+        "num_attention_heads": 32*4,
+        "num_layers": 12,
+        "batch_size": 512,
+        "per_device_train_batch_size": 1,
+    },   
+    "3B5": { # 3294678528
+        "hidden_size": int(1024*4.5),
+        "intermediate_size": int(1024*4.5)*4,
+        "num_attention_heads": 32*4,
+        "num_layers": 12,
+        "batch_size": 512,
+        "per_device_train_batch_size": 1,
+    },        
     "1B1": {
         "hidden_size": 1792,
         "intermediate_size": 1792*4,
         "num_attention_heads": 14,
         "num_layers": 26,
         "batch_size": 256,
+        "per_device_train_batch_size": 1,
     },
     "2B8": {
         "hidden_size": 2560,
@@ -170,6 +230,7 @@ TARGET_CONFIG = {
         "num_attention_heads": 20,
         "num_layers": 34,
         "batch_size": 512,
+        "per_device_train_batch_size": 1,
     },
 }
 
@@ -179,8 +240,15 @@ BASE_NUM_ATTENTION_HEADS = 8
 LR = 1e-3 # MUP default LR
 INIT_RANGE = 0.01 # MUP default init range
 
-CONFIG_TO_RUN = "200M" # MODIFY BASED ON DESIRED CONFIG
+CONFIG_TO_RUN = "3B5" # MODIFY BASED ON DESIRED CONFIG
 RUN_OFFLINE = True
+
+# mup-params-tokens
+model_name = "mup-3b5-100m-e3"
+
+if RUN_OFFLINE:
+    import os
+    os.environ["HF_DATASETS_OFFLINE"] = "1"
 
 BATCH_SIZE = TARGET_CONFIG[CONFIG_TO_RUN]["batch_size"]
 
@@ -210,7 +278,8 @@ target_config = GPT2Config(
     intermediate_size=TARGET_CONFIG[CONFIG_TO_RUN]["intermediate_size"],
     num_attention_heads=TARGET_CONFIG[CONFIG_TO_RUN]["num_attention_heads"],
     num_layers=TARGET_CONFIG[CONFIG_TO_RUN]["num_layers"],
-    initializer_range=INIT_RANGE,    
+    initializer_range=INIT_RANGE,
+    use_cache=False,  
 )
 target_model = GPT2LMHeadModel(config=target_config)
 
@@ -238,14 +307,12 @@ Adapted from:
 https://colab.research.google.com/github/huggingface/notebooks/blob/main/examples/language_modeling.ipynb
 """
 
-# mup-params-tokens
-model_name = "mup-200m-100m"
-
 from datasets import load_dataset
 # git clone https://huggingface.co/datasets/datablations/c4-100m
-datasets = load_dataset('datablations/c4-100m')
+datasets = load_dataset('./c4-100m')
 # wget https://huggingface.co/datasets/allenai/c4/resolve/main/en/c4-validation.00000-of-00008.json.gz
-val_dataset = load_dataset('json', data_files='c4-validation.00000-of-00008.json.gz')['train']
+# val_dataset = load_dataset('json', data_files='c4-validation.00000-of-00008.json.gz')['train']
+val_dataset = load_dataset('json', data_files='c4-validation.*-of-00008.json.gz')['train']
 # val_dataset = load_dataset('c4', 'en', split='validation[:10%]')
 datasets["validation"] = val_dataset
 
@@ -288,9 +355,9 @@ scheduler = LinearWarmupCosineAnnealingLR(
     warmup_epochs=num_steps // 100, # 1% of training steps
     max_epochs=num_steps,
     eta_min=LR / 10, # Decay to 10% of LR
+)
 
-
-per_device_train_batch_size = 4
+per_device_train_batch_size = TARGET_CONFIG[CONFIG_TO_RUN]["per_device_train_batch_size"]
 gradient_accumulation_steps = BATCH_SIZE // per_device_train_batch_size
 
 training_args = TrainingArguments(
@@ -299,9 +366,21 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     push_to_hub=not(RUN_OFFLINE),
     per_device_train_batch_size=per_device_train_batch_size,
+    per_device_eval_batch_size=16,
     num_train_epochs=1,
     gradient_accumulation_steps=gradient_accumulation_steps,
+    save_steps=100,
+    bf16=True,
+    gradient_checkpointing=True,
 )
+
+# If loading pre-trained model for eval
+#from mutransformers import GPT2Config, GPT2LMHeadModel
+#from mup import make_base_shapes, set_base_shapes, MuAdamW
+#model_name = "mup-2b-100m-e3"
+#target_model = GPT2LMHeadModel.from_pretrained(model_name)
+#set_base_shapes(target_model, base_shapes)
+#set_base_shapes(target_model, 'gpt256.bsh')
 
 trainer = Trainer(
     model=target_model,
@@ -311,7 +390,18 @@ trainer = Trainer(
     optimizers=(optimizer, scheduler), # Use mup optimizer & cosine scheduler
 )
 
+del base_model
+del delta_model
+
 trainer.train()
+
+# Continue training
+# trainer.train("checkpoint-100")
+
+if RUN_OFFLINE:
+    trainer.save_model(model_name)
+else:
+    trainer.push_to_hub()
 
 import math
 eval_results = trainer.evaluate()
@@ -319,10 +409,7 @@ print(f"Loss: {eval_results['eval_loss']:.4f}")
 print(f"Perplexity: {math.exp(eval_results['eval_loss']):.4f}")
 
 import json
-with open(f"{model_name}.json", "w") as f:
+with open(f"{model_name}-full-gpt2lmmup.json", "w") as f:
     json.dump(eval_results, f)
 
-if RUN_OFFLINE:
-    trainer.save_model(model_name)
-else:
-    trainer.push_to_hub()
+
