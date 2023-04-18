@@ -7,6 +7,8 @@ muP Preparation from https://github.com/microsoft/mutransformers#basic-usage-of-
 !pip install -e .
 !pip install -q datasets
 
+# Or activate env
+# 
 
 With our CC-like architectures we found that
 7m params & 100M tokens -> 8.1 loss
@@ -32,8 +34,7 @@ Then use those HPs found for 1B & 2b8 models
 import warnings
 import math
 from typing import List
-from torch import nn
-from torch.optim import Adam, Optimizer
+from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 
 class LinearWarmupCosineAnnealingLR(_LRScheduler):
@@ -146,11 +147,6 @@ class LinearWarmupCosineAnnealingLR(_LRScheduler):
         ]
 
 
-from mutransformers import GPT2Config, GPT2LMHeadModel
-from mup import make_base_shapes, set_base_shapes, MuAdamW
-from functools import partial
-
-
 TARGET_CONFIG = {
     "test": {
         "hidden_size": 1024,
@@ -234,17 +230,19 @@ TARGET_CONFIG = {
     },
 }
 
+CONFIG_TO_RUN = "200M" # MODIFY BASED ON DESIRED CONFIG
+USE_MUP = False
+RUN_OFFLINE = True
+# method-params-tokens
+model_name = "sp" if not USE_MUP else "mup"
+model_name += f"-{CONFIG_TO_RUN}".lower()
+model_name += "-100m"
+
 BASE_HIDDEN = 128
 BASE_INTERMEDIATE = 256
 BASE_NUM_ATTENTION_HEADS = 8
-LR = 1e-3 # MUP default LR
+LR = 1e-3 if USE_MUP else 2e-4 # MUP default LR & SP default LR
 INIT_RANGE = 0.01 # MUP default init range
-
-CONFIG_TO_RUN = "3B5" # MODIFY BASED ON DESIRED CONFIG
-RUN_OFFLINE = True
-
-# mup-params-tokens
-model_name = "mup-3b5-100m-e3"
 
 if RUN_OFFLINE:
     import os
@@ -253,47 +251,61 @@ if RUN_OFFLINE:
 BATCH_SIZE = TARGET_CONFIG[CONFIG_TO_RUN]["batch_size"]
 
 
-# define a base model
-base_config = GPT2Config(
-    hidden_size=BASE_HIDDEN,
-    intermediate_size=BASE_INTERMEDIATE,
-    num_attention_heads=BASE_NUM_ATTENTION_HEADS,
-    initializer_range=INIT_RANGE,    
-)
-base_model = GPT2LMHeadModel(config=base_config)
-# define a delta models where we vary all "widths" we want to vary
-delta_config = GPT2Config(
-    hidden_size=BASE_HIDDEN*2,
-    intermediate_size=BASE_INTERMEDIATE*2,
-    num_attention_heads=BASE_NUM_ATTENTION_HEADS*2,
-    initializer_range=INIT_RANGE,
-)
-delta_model = GPT2LMHeadModel(config=delta_config)
-# define a base shape object based on comparing delta_model against base_model
-base_shapes = make_base_shapes(base_model, delta_model, savefile='gpt256.bsh')
+if USE_MUP:
+    from mutransformers import GPT2Config, GPT2LMHeadModel
+    from mup import make_base_shapes, set_base_shapes, MuAdamW
+    # define a base model
+    base_config = GPT2Config(
+        hidden_size=BASE_HIDDEN,
+        intermediate_size=BASE_INTERMEDIATE,
+        num_attention_heads=BASE_NUM_ATTENTION_HEADS,
+        initializer_range=INIT_RANGE,    
+    )
+    base_model = GPT2LMHeadModel(config=base_config)
+    # define a delta models where we vary all "widths" we want to vary
+    delta_config = GPT2Config(
+        hidden_size=BASE_HIDDEN*2,
+        intermediate_size=BASE_INTERMEDIATE*2,
+        num_attention_heads=BASE_NUM_ATTENTION_HEADS*2,
+        initializer_range=INIT_RANGE,
+    )
+    delta_model = GPT2LMHeadModel(config=delta_config)
+    # define a base shape object based on comparing delta_model against base_model
+    base_shapes = make_base_shapes(base_model, delta_model, savefile='gpt256.bsh')
+    # define target model
+    target_config = GPT2Config(
+        hidden_size=TARGET_CONFIG[CONFIG_TO_RUN]["hidden_size"],
+        intermediate_size=TARGET_CONFIG[CONFIG_TO_RUN]["intermediate_size"],
+        num_attention_heads=TARGET_CONFIG[CONFIG_TO_RUN]["num_attention_heads"],
+        num_layers=TARGET_CONFIG[CONFIG_TO_RUN]["num_layers"],
+        initializer_range=INIT_RANGE,
+        use_cache=False,  
+    )
+else:
+    from transformers import GPT2Config, GPT2LMHeadModel
+    # define target model
+    target_config = GPT2Config(
+        hidden_size=TARGET_CONFIG[CONFIG_TO_RUN]["hidden_size"],
+        intermediate_size=TARGET_CONFIG[CONFIG_TO_RUN]["intermediate_size"],
+        num_attention_heads=TARGET_CONFIG[CONFIG_TO_RUN]["num_attention_heads"],
+        num_layers=TARGET_CONFIG[CONFIG_TO_RUN]["num_layers"],
+        use_cache=False,  
+    )
 
-# define target model
-target_config = GPT2Config(
-    hidden_size=TARGET_CONFIG[CONFIG_TO_RUN]["hidden_size"],
-    intermediate_size=TARGET_CONFIG[CONFIG_TO_RUN]["intermediate_size"],
-    num_attention_heads=TARGET_CONFIG[CONFIG_TO_RUN]["num_attention_heads"],
-    num_layers=TARGET_CONFIG[CONFIG_TO_RUN]["num_layers"],
-    initializer_range=INIT_RANGE,
-    use_cache=False,  
-)
 target_model = GPT2LMHeadModel(config=target_config)
 
-# set base shapes
-set_base_shapes(target_model, base_shapes)
-# you can alternatively load base shape from file
-# set_base_shapes(target_model, 'bert256.bsh')
-
-# re-initialize
-target_model.apply(target_model._init_weights)
-
-# make sure to use mup optimizers for training
-optimizer = MuAdamW(target_model.parameters(), lr=LR)
-
+if USE_MUP:
+    # set base shapes
+    set_base_shapes(target_model, base_shapes)
+    # you can alternatively load base shape from file
+    # set_base_shapes(target_model, 'bert256.bsh')
+    # re-initialize
+    target_model.apply(target_model._init_weights)
+    # make sure to use mup optimizers for training
+    optimizer = MuAdamW(target_model.parameters(), lr=LR)
+else:
+    from transformers import AdamW
+    optimizer = AdamW(target_model.parameters(), lr=LR)
 
 import numpy as np
 model_parameters = filter(lambda p: p.requires_grad, target_model.parameters())
@@ -318,13 +330,12 @@ datasets["validation"] = val_dataset
 
 datasets = datasets.select_columns("text")
 
-from transformers import AutoTokenizer, Trainer, TrainingArguments, get_scheduler
+from transformers import AutoTokenizer, Trainer, TrainingArguments
 
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 tokenized_datasets = datasets.map(lambda x: tokenizer(x["text"]), batched=True, num_proc=4, remove_columns=["text"])
 
 block_size = tokenizer.model_max_length
-# block_size = 128
 
 def group_texts(examples):
     # Concatenate all texts.
@@ -366,12 +377,12 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     push_to_hub=not(RUN_OFFLINE),
     per_device_train_batch_size=per_device_train_batch_size,
-    per_device_eval_batch_size=16,
+    per_device_eval_batch_size=32,
     num_train_epochs=1,
     gradient_accumulation_steps=gradient_accumulation_steps,
     save_steps=100,
     bf16=True,
-    gradient_checkpointing=True,
+    #gradient_checkpointing=True, # Use if OOM
 )
 
 # If loading pre-trained model for eval
@@ -390,8 +401,9 @@ trainer = Trainer(
     optimizers=(optimizer, scheduler), # Use mup optimizer & cosine scheduler
 )
 
-del base_model
-del delta_model
+if USE_MUP:
+    del base_model
+    del delta_model
 
 trainer.train()
 
@@ -409,7 +421,7 @@ print(f"Loss: {eval_results['eval_loss']:.4f}")
 print(f"Perplexity: {math.exp(eval_results['eval_loss']):.4f}")
 
 import json
-with open(f"{model_name}-full-gpt2lmmup.json", "w") as f:
+with open(f"{model_name}-full.json", "w") as f:
     json.dump(eval_results, f)
 
 
