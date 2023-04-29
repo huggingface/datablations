@@ -7,9 +7,6 @@ muP Preparation from https://github.com/microsoft/mutransformers#basic-usage-of-
 !pip install -e .
 !pip install -q datasets
 
-# Or activate env
-# 
-
 With our CC-like architectures we found that
 7m params & 100M tokens -> 8.1 loss
 1b1 params & 100M tokens -> 6.6 loss
@@ -230,8 +227,8 @@ TARGET_CONFIG = {
     },
 }
 
-CONFIG_TO_RUN = "200M" # MODIFY BASED ON DESIRED CONFIG
-USE_MUP = False
+CONFIG_TO_RUN = "2B" # MODIFY BASED ON DESIRED CONFIG
+USE_MUP = True
 RUN_OFFLINE = True
 # method-params-tokens
 model_name = "sp" if not USE_MUP else "mup"
