@@ -1,0 +1,1 @@
+"validation_c4: 1.0 0:1 /scratch/project_462000119/data/c4_validation/gpt2tok_c4validation_rerun_text_document" "validation_oscar: 1.0 0:1 /scratch/project_462000119/data/oscar_validation/gpt2tok_oscarvalidation_text_document"

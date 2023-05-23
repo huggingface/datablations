@@ -1,0 +1,1 @@
+"train: 1.0 0:1 /scratch/project_462000119/data/c4perplexity/gpt2tok_c4_en_pplx_25_text_document"

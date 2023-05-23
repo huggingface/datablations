@@ -1,0 +1,1 @@
+"train: 1.0 0:1 /scratch/project_462000119/data/oscarroots/oscar_roots_filter_text_document"
