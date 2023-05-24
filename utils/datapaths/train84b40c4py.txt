@@ -1,0 +1,1 @@
+"train: 0.4 0:1 /scratch/project_462000119/data/c4_subsampled/gpt2tok_c4_en_84B_text_document, 0.6 0:1 /scratch/project_462000119/data/python/gpt2tok_python_84B_content_document"

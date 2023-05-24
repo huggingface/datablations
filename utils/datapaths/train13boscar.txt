@@ -1,0 +1,1 @@
+"train: 1.0 0:1 /scratch/project_462000119/data/oscar_subsampled/gpt2tok_oscar_en_13B_text_document"

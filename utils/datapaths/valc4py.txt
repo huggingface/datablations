@@ -1,0 +1,1 @@
+"validation: 1.0 0:1 /scratch/project_462000119/data/c4_validation/gpt2tok_c4validation_rerun_text_document" "validation_python: 1.0 0.95:1  /scratch/project_462000119/data/python/gpt2tok_python_content_document"
