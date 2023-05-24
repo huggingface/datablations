@@ -1,7 +1,6 @@
 # Scaling Data-Constrained Language Models
 
-This repository provides an overview of all components from the paper `Scaling Data-Constrained Language Models`. TODO: paper link
-
+This repository provides an overview of all components from the paper Scaling Data-Constrained Language Models.
 
 <!-- TOC -->
 
@@ -47,7 +46,7 @@ python Megatron-DeepSpeed/tools/preprocess_data_many_cores.py \
 --output-prefix gpt2tok_c4_en_1B9 \
 --dataset-impl mmap \
 --tokenizer-type PretrainedFromHF \
---tokenizer-name-or-path /home/niklas_huggingface_co/gpt2 \
+--tokenizer-name-or-path gpt2 \
 --append-eod \
 --workers 64
 ```
@@ -60,12 +59,12 @@ python Megatron-DeepSpeed/tools/preprocess_data_many_cores.py \
 --output-prefix gpt2tok_oscar_en_1B9 \
 --dataset-impl mmap \
 --tokenizer-type PretrainedFromHF \
---tokenizer-name-or-path /home/niklas_huggingface_co/gpt2 \
+--tokenizer-name-or-path gpt2 \
 --append-eod \
 --workers 64
 ```
 
-By using `head` we make sure that different subsets will have overlapping samples to reduce randomness.
+where `gpt2` points to a folder containing all files from https://huggingface.co/gpt2/tree/main. By using `head` we make sure that different subsets will have overlapping samples to reduce randomness.
 
 
 For evaluation during training and the final evaluation, we use the validation set for C4:
@@ -80,7 +79,7 @@ python Megatron-DeepSpeed/tools/preprocess_data_many_cores.py \
 --output-prefix gpt2tok_c4validation_rerun \
 --dataset-impl mmap \
 --tokenizer-type PretrainedFromHF \
---tokenizer-name-or-path /pfs/lustrep4/scratch/project_462000119/muennighoff/dec-2022-tasky/gpt2 \
+--tokenizer-name-or-path gpt2 \
 --append-eod \
 --workers 2
 ```
@@ -91,12 +90,20 @@ For OSCAR which has not official validation set we take a part of the training s
 python Megatron-DeepSpeed/tools/preprocess_data_many_cores.py --input oscarvalidation.jsonl --output-prefix gpt2tok_oscarvalidation --dataset-impl mmap --tokenizer-type PretrainedFromHF --tokenizer-name-or-path gpt2 --append-eod --workers 2
 ```
 
+We have uploaded several preprocessed subsets for usage with megatron:
+- C4: https://huggingface.co/datasets/datablations/c4-subsets
+- OSCAR: https://huggingface.co/datasets/datablations/oscar-subsets
+
+Some bin files were split using e.g. `split --number=l/40 gpt2tok_c4_en_1B9.bin gpt2tok_c4_en_1B9.bin.` and `split --number=l/40 gpt2tok_oscar_en_1B9.bin gpt2tok_oscar_en_1B9.bin.`. You need to cat them together again using `cat gpt2tok_c4_en_1B9.bin.* > gpt2tok_c4_en_1B9.bin` and `cat gpt2tok_oscar_en_1B9.bin.* > gpt2tok_oscar_en_1B9.bin`.
+
 ### Code
 
-We experiment with mixing code to the natural language data using the Python split from the [the-stack-dedup](https://huggingface.co/datasets/bigcode/the-stack-dedup) (We actually use a private version that we cannot share, but it is very similar). We download the data, turn it into a single jsonl file and preprocess it using the same approach as outlined above.
+We experiment with mixing code with the natural language data using the Python split from the [the-stack-dedup](https://huggingface.co/datasets/bigcode/the-stack-dedup). We download the data, turn it into a single jsonl file and preprocess it using the same approach as outlined above.
 
 `split --number=l/40 gpt2tok_python_content_document.bin gpt2tok_python_content_document.bin.`
 `cat ... > gpt2tok_python_content_document.bin`
+
+We have uploaded the preprocessed version for usage with megatron here: https://huggingface.co/datasets/datablations/python-megatron. We have split the bin file using `split --number=l/40 gpt2tok_python_content_document.bin gpt2tok_python_content_document.bin.`, so you need to cat them together again using `cat gpt2tok_python_content_document.bin.* > gpt2tok_python_content_document.bin`.
 
 
 ### Filtering
@@ -111,7 +118,7 @@ We provide the tokenized versions that can be used for training with Megatron at
 - C4: https://huggingface.co/datasets/datablations/c4-filter-megatron
 - OSCAR: https://huggingface.co/datasets/datablations/oscar-filter-megatron
 
-`split --number=l/10 perplexity25/gpt2tok_oscar_en_perplexity_25_text_document.bin perplexity25/gpt2tok_oscar_en_perplexity_25_text_document.bin.`
+`.bin` files were split using something like `split --number=l/10 gpt2tok_oscar_en_perplexity_25_text_document.bin gpt2tok_oscar_en_perplexity_25_text_document.bin.`, so you need to concatenate them back together via `cat gpt2tok_oscar_en_perplexity_25_text_document.bin. > gpt2tok_oscar_en_perplexity_25_text_document.bin`.
 
 To recreate the tokenized versions given the metadata dataset,
 - OSCAR:
@@ -160,13 +167,20 @@ ds["train"].filter(lambda x: x["perplexity_score"] < p_25, num_proc=128).remove_
 ds["train"].filter(lambda x: x["perplexity_score"] < p_50, num_proc=128).remove_columns(['meta', 'perplexity_score', 'text_length', 'url', 'domain', 'dup_ratio', 'pairs', 'repetitions', 'included_in_dedup', 'cluster', 'id']).to_json("oscar_perplexity50.jsonl", num_proc=128, force_ascii=False)
 ```
 
-You can then tokenize the resulting jsonl files for training with Megatron as follows:
-
+You can then tokenize the resulting jsonl files for training with Megatron as described in the [Repeating](#repeating) section.
 
 #### Deduplication
 
-To dedup, do XYZ.
 
+C4:
+For C4 you just need to remove all samples where the `repetitions` field is populated, via e.g.
+
+```python
+from datasets import load_dataset
+import numpy as np
+ds = load_dataset("datablations/c4-dedup", use_auth_token=True, streaming=False, num_proc=128)
+ds.filter(lambda x: not(x["repetitions"]).to_json('c4_dedup.jsonl', num_proc=128, force_ascii=False)
+```
 
 ## Models
 
@@ -297,7 +311,7 @@ For the muP ablation in the Appendix we use the script at `training_scripts/mup.
 
 - Figure 1: `plotstables/return_alloc.ipynb` & [colab](https://colab.research.google.com/drive/1wW3SjEoG6zPSsI7JI8TyY5uwYhVHvcLD?usp=sharing)
 - Figure 2: `plotstables/dataset_setup.ipynb` & [colab](https://colab.research.google.com/drive/1AqqoNduhgzOZs73geDlLBmmR8_q4frDf?usp=sharing)
-- Figure 3: `plotstables/isoloss.ipynb`& [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
+- Figure 3: `plotstables/contours.ipynb`& [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
 - Figure 4: `plotstables/isoflops_training.ipynb` & [colab](https://colab.research.google.com/drive/1i00FUdVp0Oj-Qw40ITLSGXwzuxpqBjmw?usp=sharing)
 - Figure 5: `plotstables/return_plot.ipynb` & [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
 - Figure 6 (Left): `plotstables/strategies.drawio` & `plotstables/strategies.pdf`
