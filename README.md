@@ -5,6 +5,7 @@ This repository provides an overview of all components from the paper Scaling Da
 <!-- TOC -->
 
 - [Scaling Data-Constrained Language Models](#scaling-data-constrained-language-models)
+    - [Overview](#overview)
     - [Data](#data)
         - [Repeating](#repeating)
         - [Code](#code)
@@ -24,10 +25,16 @@ This repository provides an overview of all components from the paper Scaling Da
     - [Plots & Tables](#plots--tables)
         - [Plots](#plots)
         - [Tables](#tables)
+    - [License](#license)
     - [Citation](#citation)
 
 <!-- /TOC -->
 
+## Overview
+
+We investigate scaling language models in data-constrained regimes. We run a large set of experiments varying the extent of data repetition and compute budget, ranging up to 900 billion training tokens and 9 billion parameter models. Based on our runs we propose and empirically validate a scaling law for compute optimality that accounts for the decreasing value of repeated tokens and excess parameters. We also experiment with approaches mitigating data scarcity, including augmenting the training dataset with code data, perplexity-filtering and deduplication. Models and datasets from our 400 training runs are available via this repository.
+
+![](plotstables/return_alloc.png)
 
 ## Data
 
@@ -189,7 +196,7 @@ ds.filter(lambda x: not(x["repetitions"]).to_json('c4_dedup.jsonl', num_proc=128
 
 All models can be downloaded at https://huggingface.co/datablations. 
 
-Models are generally named as follows: `lm1-{parameters}-{tokens}-{unique_tokens}`, specifically individual models in the folders are named as: `{parameters}{tokens}{unique_tokens}{optional specifier}`, for example `1b12b8100m` would be 1.1 billion params, 2.8 billion tokens, 100 million unique tokens. The `xby` (`1b1`, `2b8` etc.) convention introduces some ambiguity if numbers belong to parameters or tokens, but you can always check the sbatch script to see the exact parameters / tokens / unique tokens.
+Models are generally named as follows: `lm1-{parameters}-{tokens}-{unique_tokens}`, specifically individual models in the folders are named as: `{parameters}{tokens}{unique_tokens}{optional specifier}`, for example `1b12b8100m` would be 1.1 billion params, 2.8 billion tokens, 100 million unique tokens. The `xby` (`1b1`, `2b8` etc.) convention introduces some ambiguity whether numbers belong to parameters or tokens, but you can always check the sbatch script in the respective folder to see the exact parameters / tokens / unique tokens.
 
 The easiest way to download a single model is e.g.:
 ```bash
@@ -250,7 +257,7 @@ For models corresponding to the experiments in the paper, consult the following 
 - UL2 (Appendix):
     - https://huggingface.co/datablations/lm5-2b8-55b-c4
 
-Other models not explicitly mentioned in the paper:
+Other models not analysed in the paper:
 - All checkpoints of the c4 8b7 model trained for 1 epoch: https://huggingface.co/datablations/lm1-8b7-176b-c4-ckpts
 - Adam beta2 ablation: https://huggingface.co/datablations/lm1-8b7-12b-beta
 - Warmup ablation: https://huggingface.co/datablations/lm1-83m-20b-nowarmup
@@ -314,18 +321,18 @@ We fit our formula and the C4 scaling coefficients using the code at `utils/para
 
 ### Plots
 
-- Figure 1: `plotstables/return_alloc.ipynb` & [colab](https://colab.research.google.com/drive/1wW3SjEoG6zPSsI7JI8TyY5uwYhVHvcLD?usp=sharing)
-- Figure 2: `plotstables/dataset_setup.ipynb` & [colab](https://colab.research.google.com/drive/1AqqoNduhgzOZs73geDlLBmmR8_q4frDf?usp=sharing)
-- Figure 3: `plotstables/contours.ipynb`& [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
-- Figure 4: `plotstables/isoflops_training.ipynb` & [colab](https://colab.research.google.com/drive/1i00FUdVp0Oj-Qw40ITLSGXwzuxpqBjmw?usp=sharing)
-- Figure 5: `plotstables/return.ipynb` & [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
+- Figure 1: `plotstables/return_alloc.ipynb`, `plotstables/return_alloc.pdf` & [colab](https://colab.research.google.com/drive/1wW3SjEoG6zPSsI7JI8TyY5uwYhVHvcLD?usp=sharing)
+- Figure 2: `plotstables/dataset_setup.ipynb`, `plotstables/dataset_setup.pdf` & [colab](https://colab.research.google.com/drive/1AqqoNduhgzOZs73geDlLBmmR8_q4frDf?usp=sharing)
+- Figure 3: `plotstables/contours.ipynb`, `plotstables/contours.pdf` & [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
+- Figure 4: `plotstables/isoflops_training.ipynb`, `plotstables/isoflops_training.pdf` & [colab](https://colab.research.google.com/drive/1i00FUdVp0Oj-Qw40ITLSGXwzuxpqBjmw?usp=sharing)
+- Figure 5: `plotstables/return.ipynb`, `plotstables/return.pdf` & [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
 - Figure 6 (Left): `plotstables/strategies.drawio` & `plotstables/strategies.pdf`
-- Figure 6 (Right): `plotstables/strategies.ipynb` & [colab](https://colab.research.google.com/drive/1SqB-4WxFm0WXL7rGqfwXjakjIb1yy6EA?usp=sharing)
+- Figure 6 (Right): `plotstables/beyond.ipynb`, `plotstables/beyond.pdf` & [colab](https://colab.research.google.com/drive/1SqB-4WxFm0WXL7rGqfwXjakjIb1yy6EA?usp=sharing)
 - Figure 7: `plotstables/cartoon.pptx` & `plotstables/cartoon.pdf`
 - Figure 8: Same as Figure 3
-- Figure 9 - 11: `plotstables/mup_dd_dd.ipynb` & [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
+- Figure 9 - 11: `plotstables/mup_dd_dd.ipynb`, `plotstables/mup.pdf`, `plotstables/dd.pdf`, `plotstables/dedup.pdf` & [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
 - Figure 12 - 15: Same as Figure 4
-- Figure 16: `plotstables/perplexity_histogram.ipynb`
+- Figure 16: `plotstables/perplexity_histogram.ipynb` &  `plotstables/perplexity_histogram.pdf`
 - Figure 17 - 35: Manual
 
 ### Tables
@@ -337,6 +344,9 @@ We fit our formula and the C4 scaling coefficients using the code at `utils/para
 - Table 11 - 12: `plotstables/filtering.ipynb` & [colab](https://colab.research.google.com/drive/1OKkrGBgRI8Uu_dq6RF8q_OIFGP-Saeah?usp=sharing)
 - Table 13: Manual
 
+## License
+
+All models and code are licensed under Apache 2.0. Filtered datasets are released with the same licenses as the datasets they stem from.
 
 ## Citation
 
