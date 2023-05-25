@@ -1,10 +1,9 @@
-# Parameters from Chinchilla paper
-# (https://arxiv.org/pdf/2203.15556.pdf#page=36) with
+# Parameters Scaling Data-Constrained Language Models & Chinchilla paper with
 # corrected n_heads for 3530M and 4084M and extensions from 
 # "Scaling Data-Constrained Language Models"
 # values are (d_model ffw_size kv_size n_heads n_layers)
 
-PARAM_7M=(128 256 32 4 3)
+PARAM_7M=(128 512 32 4 3)
 PARAM_14M=(224 896 32 7 4)
 PARAM_20M=(288 1152 32 7 5)
 PARAM_35M=(448 1792 32 7 6)
