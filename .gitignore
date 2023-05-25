@@ -2,3 +2,4 @@
 /data/
 /src/
 *.code-workspace
+.DS_Store

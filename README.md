@@ -4,25 +4,27 @@ This repository provides an overview of all components from the paper Scaling Da
 
 <!-- TOC -->
 
-- [Data](#data)
-    - [Repeating](#repeating)
-    - [Code](#code)
-    - [Filtering](#filtering)
-        - [Perplexity](#perplexity)
-        - [Deduplication](#deduplication)
-- [Models](#models)
-    - [Download](#download)
-    - [Training](#training)
-        - [Regular models](#regular-models)
-        - [muP](#mup)
-- [Downstream Evaluation](#downstream-evaluation)
-    - [Rank Eval / Accuracy](#rank-eval--accuracy)
-    - [Generative / Rouge](#generative--rouge)
-    - [bAbI / Exact match](#babi--exact-match)
-- [Plots & Tables](#plots--tables)
-    - [Plots](#plots)
-    - [Tables](#tables)
-- [Citation](#citation)
+- [Scaling Data-Constrained Language Models](#scaling-data-constrained-language-models)
+    - [Data](#data)
+        - [Repeating](#repeating)
+        - [Code](#code)
+        - [Filtering](#filtering)
+            - [Perplexity](#perplexity)
+            - [Deduplication](#deduplication)
+    - [Models](#models)
+        - [Download](#download)
+        - [Training](#training)
+            - [Regular models](#regular-models)
+            - [muP](#mup)
+    - [Parametric Fit](#parametric-fit)
+    - [Downstream Evaluation](#downstream-evaluation)
+        - [Rank Eval / Accuracy](#rank-eval--accuracy)
+        - [Generative / Rouge](#generative--rouge)
+        - [bAbI / Exact match](#babi--exact-match)
+    - [Plots & Tables](#plots--tables)
+        - [Plots](#plots)
+        - [Tables](#tables)
+    - [Citation](#citation)
 
 <!-- /TOC -->
 
@@ -280,6 +282,10 @@ For repeat models, we also upload their tensorboards after training using e.g. `
 
 For the muP ablation in the Appendix we use the script at `training_scripts/mup.py`. It contains setup instructions.
 
+## Parametric Fit
+
+We fit our formula and the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
+
 ## Downstream Evaluation
 
 ### Rank Eval / Accuracy
@@ -312,9 +318,10 @@ For the muP ablation in the Appendix we use the script at `training_scripts/mup.
 - Figure 2: `plotstables/dataset_setup.ipynb` & [colab](https://colab.research.google.com/drive/1AqqoNduhgzOZs73geDlLBmmR8_q4frDf?usp=sharing)
 - Figure 3: `plotstables/contours.ipynb`& [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
 - Figure 4: `plotstables/isoflops_training.ipynb` & [colab](https://colab.research.google.com/drive/1i00FUdVp0Oj-Qw40ITLSGXwzuxpqBjmw?usp=sharing)
-- Figure 5: `plotstables/return_plot.ipynb` & [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
+- Figure 5: `plotstables/return.ipynb` & [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
 - Figure 6 (Left): `plotstables/strategies.drawio` & `plotstables/strategies.pdf`
 - Figure 6 (Right): `plotstables/strategies.ipynb` & [colab](https://colab.research.google.com/drive/1SqB-4WxFm0WXL7rGqfwXjakjIb1yy6EA?usp=sharing)
+- Figure 7: `plotstables/cartoon.pptx` & `plotstables/cartoon.pdf`
 - Figure 8: Same as Figure 3
 - Figure 9 - 11: `plotstables/mup_dd_dd.ipynb` & [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
 - Figure 12 - 15: Same as Figure 4
