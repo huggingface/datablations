@@ -1,10 +1,14 @@
 # Scaling Data-Constrained Language Models
 
+![](plotstables/return_alloc.png)
+
 This repository provides an overview of all components from the paper Scaling Data-Constrained Language Models.
+
+We investigate scaling language models in data-constrained regimes. We run a large set of experiments varying the extent of data repetition and compute budget, ranging up to 900 billion training tokens and 9 billion parameter models. Based on our runs we propose and empirically validate a scaling law for compute optimality that accounts for the decreasing value of repeated tokens and excess parameters. We also experiment with approaches mitigating data scarcity, including augmenting the training dataset with code data, perplexity-filtering and deduplication. Models and datasets from our 400 training runs are available via this repository.
+
 
 <!-- TOC -->
 
-- [Overview](#overview)
 - [Data](#data)
     - [Repeating](#repeating)
     - [Code](#code)
@@ -28,12 +32,6 @@ This repository provides an overview of all components from the paper Scaling Da
 - [Citation](#citation)
 
 <!-- /TOC -->
-
-## Overview
-
-We investigate scaling language models in data-constrained regimes. We run a large set of experiments varying the extent of data repetition and compute budget, ranging up to 900 billion training tokens and 9 billion parameter models. Based on our runs we propose and empirically validate a scaling law for compute optimality that accounts for the decreasing value of repeated tokens and excess parameters. We also experiment with approaches mitigating data scarcity, including augmenting the training dataset with code data, perplexity-filtering and deduplication. Models and datasets from our 400 training runs are available via this repository.
-
-![](plotstables/return_alloc.png)
 
 ## Data
 
