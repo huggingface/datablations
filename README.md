@@ -37,7 +37,7 @@ We investigate scaling language models in data-constrained regimes. We run a lar
 
 ### Repeating
 
-We experiment with repeating data on [C4](https://huggingface.co/datasets/c4) and [OSCAR](https://huggingface.co/datasets/oscar). For each dataset, we download the data and turn it into a single jsonl file, `c4.jsonl` and `oscar_en.jsonl` respectively.
+We experiment with repeating data on [C4](https://huggingface.co/datasets/c4) and the non-deduplicated English split of [OSCAR](https://huggingface.co/datasets/oscar). For each dataset, we download the data and turn it into a single jsonl file, `c4.jsonl` and `oscar_en.jsonl` respectively.
 
 Then we decide on the amount of unique tokens and the respective number of samples we need from the dataset. Note that C4 has `478.625834583` tokens per sample and OSCAR has `1312.0951072` with the GPT2Tokenizer. This was calculated by tokenizing the entire dataset and dividing the number of tokens by the number of samples. We use these numbers to calculate the needed samples.
 
@@ -89,7 +89,7 @@ python Megatron-DeepSpeed/tools/preprocess_data_many_cores.py \
 --workers 2
 ```
 
-For OSCAR which has not official validation set we take a part of the training set by doing `tail -364608 oscar_en.jsonl > oscarvalidation.jsonl` and then tokenize it as follows:
+For OSCAR which has no official validation set we take a part of the training set by doing `tail -364608 oscar_en.jsonl > oscarvalidation.jsonl` and then tokenize it as follows:
 
 ```bash
 python Megatron-DeepSpeed/tools/preprocess_data_many_cores.py --input oscarvalidation.jsonl --output-prefix gpt2tok_oscarvalidation --dataset-impl mmap --tokenizer-type PretrainedFromHF --tokenizer-name-or-path gpt2 --append-eod --workers 2
@@ -99,17 +99,13 @@ We have uploaded several preprocessed subsets for usage with megatron:
 - C4: https://huggingface.co/datasets/datablations/c4-subsets
 - OSCAR: https://huggingface.co/datasets/datablations/oscar-subsets
 
-Some bin files were split using e.g. `split --number=l/40 gpt2tok_c4_en_1B9.bin gpt2tok_c4_en_1B9.bin.` and `split --number=l/40 gpt2tok_oscar_en_1B9.bin gpt2tok_oscar_en_1B9.bin.`. You need to cat them together again using `cat gpt2tok_c4_en_1B9.bin.* > gpt2tok_c4_en_1B9.bin` and `cat gpt2tok_oscar_en_1B9.bin.* > gpt2tok_oscar_en_1B9.bin`.
+Some bin files were too large for git and thus split using e.g. `split --number=l/40 gpt2tok_c4_en_1B9.bin gpt2tok_c4_en_1B9.bin.` and `split --number=l/40 gpt2tok_oscar_en_1B9.bin gpt2tok_oscar_en_1B9.bin.`. To use them for training you need to cat them together again using `cat gpt2tok_c4_en_1B9.bin.* > gpt2tok_c4_en_1B9.bin` and `cat gpt2tok_oscar_en_1B9.bin.* > gpt2tok_oscar_en_1B9.bin`.
 
 ### Code
 
 We experiment with mixing code with the natural language data using the Python split from the [the-stack-dedup](https://huggingface.co/datasets/bigcode/the-stack-dedup). We download the data, turn it into a single jsonl file and preprocess it using the same approach as outlined above.
 
-`split --number=l/40 gpt2tok_python_content_document.bin gpt2tok_python_content_document.bin.`
-`cat ... > gpt2tok_python_content_document.bin`
-
-We have uploaded the preprocessed version for usage with megatron here: https://huggingface.co/datasets/datablations/python-megatron. We have split the bin file using `split --number=l/40 gpt2tok_python_content_document.bin gpt2tok_python_content_document.bin.`, so you need to cat them together again using `cat gpt2tok_python_content_document.bin.* > gpt2tok_python_content_document.bin`.
-
+We have uploaded the preprocessed version for usage with megatron here: https://huggingface.co/datasets/datablations/python-megatron. We have split the bin file using `split --number=l/40 gpt2tok_python_content_document.bin gpt2tok_python_content_document.bin.`, so you need to cat them together again using `cat gpt2tok_python_content_document.bin.* > gpt2tok_python_content_document.bin` for training.
 
 ### Filtering
 
@@ -135,7 +131,7 @@ To recreate the tokenized versions given the metadata dataset,
 
 #### Perplexity
 
-To create the perplexity percentiles, do XYZ.
+To create the perplexity percentiles, follow the below instructions.
 
 C4:
 
@@ -149,11 +145,11 @@ p_50 = np.percentile(ds["train"]["perplexity"], 50)
 p_75 = np.percentile(ds["train"]["perplexity"], 75)
 
 # 25 - 75th percentile
-ds["train"].filter(lambda x: p_25 < x["perplexity"] < p_75, num_proc=128).to_json("c4_perplexty25.jsonl", num_proc=128, force_ascii=False)
+ds["train"].filter(lambda x: p_25 < x["perplexity"] < p_75, num_proc=128).to_json("c4_perplexty2575.jsonl", num_proc=128, force_ascii=False)
 # 25th percentile
-ds_out_25 = ds["train"].filter(lambda x: x["perplexity"] < p_25, num_proc=128).to_json("c4_perplexty25.jsonl", num_proc=128, force_ascii=False)
+ds["train"].filter(lambda x: x["perplexity"] < p_25, num_proc=128).to_json("c4_perplexty25.jsonl", num_proc=128, force_ascii=False)
 # 50th percentile
-ds_out_50 = ds["train"].filter(lambda x: x["perplexity"] < p_50, num_proc=128).to_json("c4_perplexty25.jsonl", num_proc=128, force_ascii=False)
+ds["train"].filter(lambda x: x["perplexity"] < p_50, num_proc=128).to_json("c4_perplexty50.jsonl", num_proc=128, force_ascii=False)
 ```
 
 OSCAR:
@@ -187,6 +183,12 @@ ds = load_dataset("datablations/c4-dedup", use_auth_token=True, streaming=False,
 ds.filter(lambda x: not(x["repetitions"]).to_json('c4_dedup.jsonl', num_proc=128, force_ascii=False)
 ```
 
+OSCAR:
+For OSCAR we provide a script at `filtering/filter_oscar_jsonl.py` to create the deduplicated dataset given the dataset with filtering metadata.
+
+
+You can then tokenize the resulting jsonl files for training with Megatron as described in the [Repeating](#repeating) section.
+
 ## Models
 
 ### Download
@@ -207,6 +209,9 @@ wget https://huggingface.co/datablations/lm1-misc/resolve/main/146m14b400m/globa
 ```
 
 For models corresponding to the experiments in the paper, consult the following repositories:
+- IsoLoss experiments & double descent data from the Appendix:
+    - https://huggingface.co/datablations/lm1-misc
+    - `lm1-misc/*dedup*` for deduplication comparison on 100M unique tokens in the appendix  
 - IsoFLOP experiments:
     - C4:
         - https://huggingface.co/datablations/lm1-8b7-178b-c4-repetitions
@@ -219,11 +224,8 @@ For models corresponding to the experiments in the paper, consult the following 
         - https://huggingface.co/datablations/lm1-4b2-84b-oscar-repetitions
         - https://huggingface.co/datablations/lm1-4b2-84b-oscarseeds
         - https://huggingface.co/datablations/lm1-2b8-55b-oscar-repetitions
-        - https://huggingface.co/datablations/lm1-2b8-55b-oscarseeds
-- IsoUniqueData experiments; Double descent data from the Appendix:
-    - https://huggingface.co/datablations/lm1-misc
-    - `lm1-misc/*dedup*` for deduplication comparison on 100M unique tokens in the appendix    
-- Code experiments:
+        - https://huggingface.co/datablations/lm1-2b8-55b-oscarseeds  
+- Code augmentation:
     - C4:
         - https://huggingface.co/datablations/lm1-4b2-84b-c4py
         - https://huggingface.co/datablations/lm1-4b2-84b-c4pyseeds
@@ -251,10 +253,9 @@ For models corresponding to the experiments in the paper, consult the following 
     - https://huggingface.co/datablations/lm1-2b8-55b-oscarroots
 - muP (Appendix):
     - https://huggingface.co/datasets/datablations/mup
-- UL2 (Appendix):
-    - https://huggingface.co/datablations/lm5-2b8-55b-c4
 
 Other models not analysed in the paper:
+- UL2: https://huggingface.co/datablations/lm5-2b8-55b-c4
 - All checkpoints of the c4 8b7 model trained for 1 epoch: https://huggingface.co/datablations/lm1-8b7-176b-c4-ckpts
 - Adam beta2 ablation: https://huggingface.co/datablations/lm1-8b7-12b-beta
 - Warmup ablation: https://huggingface.co/datablations/lm1-83m-20b-nowarmup
@@ -265,13 +266,12 @@ Other models not analysed in the paper:
 
 ### Training
 
-
 #### Regular models
 
 We train models with our fork of Megatron-DeepSpeed that works with AMD GPUs (via ROCm): https://github.com/TurkuNLP/Megatron-DeepSpeed
 If you would like to use NVIDIA GPUs (via cuda), you can use the original library: https://github.com/bigscience/Megatron-DeepSpeed
 
-You need to follow the setup instructions of either repository to create your environment (Our setup specific to LUMI is detauled in `training/megdssetup.md`). 
+You need to follow the setup instructions of either repository to create your environment (Our setup specific to LUMI is detailed in `training/megdssetup.md`). 
 
 Each model folder contains an sbatch script that was used to train the model. You can use these as a reference to train your own models adapting the necessary environment variables. The sbatch scripts reference some additional files:
 - `*txt` files that specify the data paths. You can find them at `utils/datapaths/*`, however, you will likely need to adapt the path to point to your dataset.
@@ -288,7 +288,7 @@ For the muP ablation in the Appendix we use the script at `training_scripts/mup.
 
 ## Parametric Fit
 
-We fit our formula and the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
+We fit data-constrained scaling laws & the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
 
 ## Downstream Evaluation
 
@@ -301,7 +301,7 @@ We fit our formula and the C4 scaling coefficients using the code at `utils/para
 
 ### Generative / Rouge
 
-1. Clone the `addtasks` branch of the evaluation harness: `https://github.com/Muennighoff/lm-evaluation-harness/tree/addtasks`
+1. Clone the `addtasks` branch of the evaluation harness: `git clone -b addtasks https://github.com/Muennighoff/lm-evaluation-harness.git`
 2. Setup an environment with `cd lm-evaluation-harness; pip install -e ".[dev]"; pip uninstall -y promptsource; pip install https://github.com/Muennighoff/promptsource.git@tr13` i.e. all requirements except promptsource, which is installed from a fork with the correct prompts
 3. Make sure your checkpoint path is a transformers checkpoint path
 4. Run `sbatch utils/eval_generative.sh` modifying the necessary variables in the script first
@@ -311,7 +311,7 @@ We fit our formula and the C4 scaling coefficients using the code at `utils/para
 
 1. Clone the `babi` branch of the evaluation harness: `git clone -b babi https://github.com/Muennighoff/lm-evaluation-harness.git` (Note that this branch is not compatible with the `addtasks` branch for generative tasks as it stems from `EleutherAI/lm-evaluation-harness`, while `addtasks` is based on `bigscience/lm-evaluation-harness`)
 2. Setup an environment with `cd lm-evaluation-harness; pip install -e ".[dev]"`
-3. Make sure your checkpoint path is a transformers checkpoint with tokenizer files
+3. Make sure your checkpoint path is a transformers checkpoint with tokenizer files (If you trained a gpt2 model like all models in this work, it's just the files from here: https://huggingface.co/gpt2)
 4. Run `sbatch utils/eval_babi.sh`  modifying the necessary variables in the script first
 
 ## Plots & Tables
@@ -343,7 +343,7 @@ We fit our formula and the C4 scaling coefficients using the code at `utils/para
 
 ## License
 
-All models and code are licensed under Apache 2.0. Filtered datasets are released with the same licenses as the datasets they stem from.
+All models & code are licensed under Apache 2.0. Filtered datasets are released with the same license as the datasets they stem from.
 
 ## Citation
 
