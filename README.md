@@ -2,7 +2,7 @@
 
 ![](plotstables/return_alloc.png)
 
-This repository provides an overview of all components from the paper Scaling Data-Constrained Language Models.
+This repository provides an overview of all components from the paper [Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264).
 
 We investigate scaling language models in data-constrained regimes. We run a large set of experiments varying the extent of data repetition and compute budget, ranging up to 900 billion training tokens and 9 billion parameter models. Based on our runs we propose and empirically validate a scaling law for compute optimality that accounts for the decreasing value of repeated tokens and excess parameters. We also experiment with approaches mitigating data scarcity, including augmenting the training dataset with code data, perplexity-filtering and deduplication. Models and datasets from our 400 training runs are available via this repository.
 
@@ -347,4 +347,13 @@ All models & code are licensed under Apache 2.0. Filtered datasets are released 
 
 ## Citation
 
-TODO
+```bibtex
+@article{muennighoff2023scaling,
+      title={Scaling Data-Constrained Language Models}, 
+      author={Niklas Muennighoff and Alexander M. Rush and Boaz Barak and Teven Le Scao and Aleksandra Piktus and Nouamane Tazi and Sampo Pyysalo and Thomas Wolf and Colin Raffel},
+      year={2023},
+      eprint={2305.16264},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
