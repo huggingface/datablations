@@ -302,9 +302,7 @@ E = np.exp(e)
 G = ((alpha*A)/(beta*B))**(1/(alpha+beta))
 
 def D_to_N(D):
-    a = (beta)/(alpha+beta)
-    b = (alpha)/(alpha+beta)
-    return (D * G)**(a/b) * G
+    return (D * G)**(beta/alpha) * G
 
 def scaling_law(N, D, U):
     """
