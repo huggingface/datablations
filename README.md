@@ -292,9 +292,25 @@ For the muP ablation in the Appendix we use the script at `training_scripts/mup.
 You can use our formula to compute the expected loss given parameters, data and unique tokens as follows:
 
 ```python
+import numpy as np
 func = r"$L(N,D,R_N,R_D)=E + \frac{A}{(U_N + U_N * R_N^* * (1 - e^{(-1*R_N/(R_N^*))}))^\alpha} + \frac{B}{(U_D + U_D * R_D^* * (1 - e^{(-1*R_D/(R_D^*))}))^\beta}$"
-params = [6.255414, 7.3049974, 0.6254804, 0.3526596, 0.3526596, 15.387756, 5.309743]
-def scaling_law(N, D, U, params):
+a, b, e, alpha, beta, rd_star, rn_star = [6.255414, 7.3049974, 0.6254804, 0.3526596, 0.3526596, 15.387756, 5.309743]
+
+A = np.exp(a)
+B = np.exp(b)
+E = np.exp(e)
+G = ((alpha*A)/(beta*B))**(1/(alpha+beta))
+
+def optimal_N(C):
+    a = (beta)/(alpha+beta)
+    N_opt = G*(C/6)**a
+    return N_opt
+def D_to_C(D):
+    b = (alpha)/(alpha+beta)
+    C = ((G*D) ** (1/b)) * 6
+    return C
+
+def scaling_law(N, D, U):
     """
     N: number of parameters
     D: number of total training tokens
@@ -302,20 +318,23 @@ def scaling_law(N, D, U, params):
     """
     assert U <= D, "Cannot have more unique tokens than total tokens"
 
-    a, b, e, alpha, beta, rd_star, rn_star  = params
     A = np.exp(a)
     B = np.exp(b)
     E = np.exp(e)
 
     RD = np.maximum((D / U) - 1, 0)    
-    UN = np.minimum(N,optimal_N(D_to_C(U)))
+    UN = np.minimum(N, optimal_N(D_to_C(U)))
     RN = np.maximum((N / UN ) - 1, 0)
 
     L = E + A/(UN + UN*rn_star*(1-np.exp(-1*RN/rn_star)))**alpha + B / (U + U * rd_star * (1 - np.exp(-1*RD/(rd_star))))**beta
     return L
+
+# Models in Figure 1:
+print(scaling_law(6.34e9, 242e9, 25e9)) # 2.2256440889984477 # <- This one is better
+print(scaling_law(8.67e9, 178e9, 25e9)) # 2.2269634075087867
 ```
 
-Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases. To compute the optimal allocation, you can use a simple grid search. Start with the optimal parameters as predicted by Chinchilla and then vary N and D, while keeping FLOPs fixed to find the minimum loss. You can check the code for Figure 1 or Figure 3 for an example of doing this. If you derive a closed-form expression for the optimal allocation, please let us know :)
+Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases or to compare two models like in the example above. To compute the optimal allocation, you can use a simple grid search. Start with the optimal parameters as predicted by Chinchilla and then vary N and D, while keeping FLOPs fixed to find the minimum loss. You can check the code for Figure 1 or Figure 3 for an example of doing this. If you derive a closed-form expression for the optimal allocation, please let us know :)
 
 We fit data-constrained scaling laws & the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
 
