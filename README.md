@@ -301,14 +301,10 @@ B = np.exp(b)
 E = np.exp(e)
 G = ((alpha*A)/(beta*B))**(1/(alpha+beta))
 
-def optimal_N(C):
+def D_to_N(D):
     a = (beta)/(alpha+beta)
-    N_opt = G*(C/6)**a
-    return N_opt
-def D_to_C(D):
     b = (alpha)/(alpha+beta)
-    C = ((G*D) ** (1/b)) * 6
-    return C
+    return (D * G)**(a/b) * G
 
 def scaling_law(N, D, U):
     """
@@ -323,7 +319,7 @@ def scaling_law(N, D, U):
     E = np.exp(e)
 
     RD = np.maximum((D / U) - 1, 0)    
-    UN = np.minimum(N, optimal_N(D_to_C(U)))
+    UN = np.minimum(N, D_to_N(U))
     RN = np.maximum((N / UN ) - 1, 0)
 
     L = E + A/(UN + UN*rn_star*(1-np.exp(-1*RN/rn_star)))**alpha + B / (U + U * rd_star * (1 - np.exp(-1*RD/(rd_star))))**beta
