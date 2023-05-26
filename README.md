@@ -9,27 +9,28 @@ We investigate scaling language models in data-constrained regimes. We run a lar
 
 <!-- TOC -->
 
-- [Data](#data)
-    - [Repeating](#repeating)
-    - [Code](#code)
-    - [Filtering](#filtering)
-        - [Perplexity](#perplexity)
-        - [Deduplication](#deduplication)
-- [Models](#models)
-    - [Download](#download)
-    - [Training](#training)
-        - [Regular models](#regular-models)
-        - [muP](#mup)
-- [Parametric Fit](#parametric-fit)
-- [Downstream Evaluation](#downstream-evaluation)
-    - [Rank Eval / Accuracy](#rank-eval--accuracy)
-    - [Generative / Rouge](#generative--rouge)
-    - [bAbI / Exact match](#babi--exact-match)
-- [Plots & Tables](#plots--tables)
-    - [Plots](#plots)
-    - [Tables](#tables)
-- [License](#license)
-- [Citation](#citation)
+- [Scaling Data-Constrained Language Models](#scaling-data-constrained-language-models)
+    - [Data](#data)
+        - [Repeating](#repeating)
+        - [Code](#code)
+        - [Filtering](#filtering)
+            - [Perplexity](#perplexity)
+            - [Deduplication](#deduplication)
+    - [Models](#models)
+        - [Download](#download)
+        - [Training](#training)
+            - [Regular models](#regular-models)
+            - [muP](#mup)
+    - [Parametric Fit](#parametric-fit)
+    - [Downstream Evaluation](#downstream-evaluation)
+        - [Rank Eval / Accuracy](#rank-eval--accuracy)
+        - [Generative / Rouge](#generative--rouge)
+        - [bAbI / Exact match](#babi--exact-match)
+    - [Plots & Tables](#plots--tables)
+        - [Plots](#plots)
+        - [Tables](#tables)
+    - [License](#license)
+    - [Citation](#citation)
 
 <!-- /TOC -->
 
@@ -287,6 +288,34 @@ For repeat models, we also upload their tensorboards after training using e.g. `
 For the muP ablation in the Appendix we use the script at `training_scripts/mup.py`. It contains setup instructions.
 
 ## Parametric Fit
+
+You can use our formula to compute the expected loss given parameters, data and unique tokens as follows:
+
+```python
+func = r"$L(N,D,R_N,R_D)=E + \frac{A}{(U_N + U_N * R_N^* * (1 - e^{(-1*R_N/(R_N^*))}))^\alpha} + \frac{B}{(U_D + U_D * R_D^* * (1 - e^{(-1*R_D/(R_D^*))}))^\beta}$"
+params = [6.255414, 7.3049974, 0.6254804, 0.3526596, 0.3526596, 15.387756, 5.309743]
+def scaling_law(N, D, U, params):
+    """
+    N: number of parameters
+    D: number of total training tokens
+    U: number of unique training tokens
+    """
+    assert U <= D, "Cannot have more unique tokens than total tokens"
+
+    a, b, e, alpha, beta, rd_star, rn_star  = params
+    A = np.exp(a)
+    B = np.exp(b)
+    E = np.exp(e)
+
+    RD = np.maximum((D / U) - 1, 0)    
+    UN = np.minimum(N,optimal_N(D_to_C(U)))
+    RN = np.maximum((N / UN ) - 1, 0)
+
+    L = E + A/(UN + UN*rn_star*(1-np.exp(-1*RN/rn_star)))**alpha + B / (U + U * rd_star * (1 - np.exp(-1*RD/(rd_star))))**beta
+    return L
+```
+
+Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases. To compute the optimal allocation, you can use a simple grid search. Start with the optimal parameters as predicted by Chinchilla and then vary N and D, while keeping FLOPs fixed to find the minimum loss. You can check the code for Figure 1 or Figure 3 for an example of doing this. If you derive a closed-form expression for the optimal allocation, please let us know :)
 
 We fit our formula and the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
 
