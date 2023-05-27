@@ -322,7 +322,7 @@ def scaling_law(N, D, U):
     L = E + A/(UN + UN*rn_star*(1-np.exp(-1*RN/rn_star)))**alpha + B / (U + U * rd_star * (1 - np.exp(-1*RD/(rd_star))))**beta
     return L
 
-# Models in Figure 1:
+# Models in Figure 1 (right):
 print(scaling_law(6.34e9, 242e9, 25e9)) # 2.2256440889984477 # <- This one is better
 print(scaling_law(8.67e9, 178e9, 25e9)) # 2.2269634075087867
 ```
