@@ -327,9 +327,33 @@ print(scaling_law(6.34e9, 242e9, 25e9)) # 2.2256440889984477 # <- This one is be
 print(scaling_law(8.67e9, 178e9, 25e9)) # 2.2269634075087867
 ```
 
-Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases or to compare two models like in the example above. To compute the optimal allocation, you can use a simple grid search. Start with the optimal parameters as predicted by Chinchilla and then vary N and D, while keeping FLOPs fixed to find the minimum loss. You can check the code for Figure 1 or Figure 3 for an example of doing this. If you derive a closed-form expression for the optimal allocation, please let us know :)
+Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases or to compare two models like in the example above. To compute the optimal allocation, you can use a simple grid search:
 
-We fit data-constrained scaling laws & the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
+```python
+def optimal_allocation(N_BASE, D_BASE, U_BASE):
+    min_l = float("inf")
+    for i in np.linspace(1.0001, 3, 500):
+        D =  D_BASE*i
+        U = min(U_BASE, D)
+        N = N_BASE/i
+        new_l = scaling_law(N, D, U)
+        if new_l < min_l:
+            min_l, min_t, min_s = new_l, D, N
+        D =  D_BASE/i
+        U = min(U_BASE, D)
+        N = N_BASE*i
+        new_l = scaling_law(N, D, U)
+        if new_l < min_l:
+            min_l, min_t, min_s = new_l, D, N
+     return min_l, min_t, min_s
+
+_, min_t, min_s = optimal_allocation(8.67e9, 178e9, 25e9)
+print(f"Optimal configuration: {min_t} tokens, {min_t/25e9} epochs, {min_s} parameters")
+# -> 227B tokens, 9.1 epochs, 6.8B parameters
+# We went more extreme in Figure 1 to really put our prediction of "many epochs, fewer params" to the test
+```
+
+If you derive a closed-form expression for the optimal allocation instead of the above grid search, please let us know :) We fit data-constrained scaling laws & the C4 scaling coefficients using the code at `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
 
 ## Downstream Evaluation
 
@@ -369,9 +393,11 @@ We fit data-constrained scaling laws & the C4 scaling coefficients using the cod
 - Figure 7: `plotstables/cartoon.pptx` & `plotstables/cartoon.pdf`
 - Figure 8: Same as Figure 3
 - Figure 9 - 11: `plotstables/mup_dd_dd.ipynb`, `plotstables/mup.pdf`, `plotstables/dd.pdf`, `plotstables/dedup.pdf` & [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
-- Figure 12 - 15: Same as Figure 4
-- Figure 16: `plotstables/perplexity_histogram.ipynb` &  `plotstables/perplexity_histogram.pdf`
-- Figure 17 - 35: Manual
+- Figure 12: Same as Figure 3
+- Figure 13: `plotstables/galactica.ipynb`, `plotstables/galactica.pdf` & [colab](https://colab.research.google.com/drive/146lFaI6fhIdXaOAgtaqV4X3-rNGrH92C?usp=sharing)
+- Figure 14 - 17: Same as Figure 4
+- Figure 18: `plotstables/perplexity_histogram.ipynb` &  `plotstables/perplexity_histogram.pdf`
+- Figure 19 - 37: Manual
 
 ### Tables
 
