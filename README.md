@@ -391,11 +391,11 @@ If you derive a closed-form expression for the optimal allocation instead of the
 - Figure 6 (Left): `plotstables/strategies.drawio` & `plotstables/strategies.pdf`
 - Figure 6 (Right): `plotstables/beyond.ipynb`, `plotstables/beyond.pdf` & [colab](https://colab.research.google.com/drive/1SqB-4WxFm0WXL7rGqfwXjakjIb1yy6EA?usp=sharing)
 - Figure 7: `plotstables/cartoon.pptx` & `plotstables/cartoon.pdf`
-- Figure 8: Same as Figure 3
+- Figure 8: `plotstables/isoloss_400m1b5.pdf` & same colab as Figure 3
 - Figure 9 - 11: `plotstables/mup_dd_dd.ipynb`, `plotstables/mup.pdf`, `plotstables/dd.pdf`, `plotstables/dedup.pdf` & [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
-- Figure 12: Same as Figure 3
+- Figure 12: `plotstables/isoloss_alphabeta_100m.pdf` & same colab as Figure 3
 - Figure 13: `plotstables/galactica.ipynb`, `plotstables/galactica.pdf` & [colab](https://colab.research.google.com/drive/146lFaI6fhIdXaOAgtaqV4X3-rNGrH92C?usp=sharing)
-- Figure 14 - 17: Same as Figure 4
+- Figure 14 - 17: `training_c4.pdf`, `validation_c4oscar.pdf`, `training_oscar.pdf`, `validation_epochs_c4oscar.pdf` & same colab as Figure 4
 - Figure 18: `plotstables/perplexity_histogram.ipynb` &  `plotstables/perplexity_histogram.pdf`
 - Figure 19 - 37: Manual
 
