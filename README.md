@@ -416,11 +416,9 @@ All models & code are licensed under Apache 2.0. Filtered datasets are released 
 
 ```bibtex
 @article{muennighoff2023scaling,
-      title={Scaling Data-Constrained Language Models}, 
-      author={Niklas Muennighoff and Alexander M. Rush and Boaz Barak and Teven Le Scao and Aleksandra Piktus and Nouamane Tazi and Sampo Pyysalo and Thomas Wolf and Colin Raffel},
-      year={2023},
-      eprint={2305.16264},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+  title={Scaling Data-Constrained Language Models},
+  author={Muennighoff, Niklas and Rush, Alexander M and Barak, Boaz and Scao, Teven Le and Piktus, Aleksandra and Tazi, Nouamane and Pyysalo, Sampo and Wolf, Thomas and Raffel, Colin},
+  journal={arXiv preprint arXiv:2305.16264},
+  year={2023}
 }
 ```
