@@ -211,7 +211,7 @@ def get_hub_data():
     """
     To simplify the setup of different projects we use a common hug info data file at HUB_DATA_PATH_SHARED.
 
-    But if desired it can be overriden with a local data file at HUB_DATA_PATH_LOCAL
+    But if desired it can be overridden with a local data file at HUB_DATA_PATH_LOCAL
     """
 
     # if os.path.isfile(HUB_DATA_PATH_LOCAL):
