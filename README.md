@@ -311,10 +311,6 @@ def scaling_law(N, D, U):
     """
     assert U <= D, "Cannot have more unique tokens than total tokens"
 
-    A = np.exp(a)
-    B = np.exp(b)
-    E = np.exp(e)
-
     RD = np.maximum((D / U) - 1, 0)    
     UN = np.minimum(N, D_to_N(U))
     RN = np.maximum((N / UN ) - 1, 0)
