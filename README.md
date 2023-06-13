@@ -269,7 +269,7 @@ Other models not analysed in the paper:
 #### Regular models
 
 We train models with our fork of Megatron-DeepSpeed that works with AMD GPUs (via ROCm): https://github.com/TurkuNLP/Megatron-DeepSpeed
-If you would like to use NVIDIA GPUs (via cuda), you can use the original library: https://github.com/bigscience/Megatron-DeepSpeed
+If you would like to use NVIDIA GPUs (via cuda), you can use the original library: https://github.com/bigscience-workshop/Megatron-DeepSpeed
 
 You need to follow the setup instructions of either repository to create your environment (Our setup specific to LUMI is detailed in `training/megdssetup.md`). 
 
