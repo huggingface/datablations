@@ -379,30 +379,31 @@ If you derive a closed-form expression for the optimal allocation instead of the
 
 ### Plots
 
-- Figure 1: `plotstables/return_alloc.ipynb`, `plotstables/return_alloc.pdf` & [colab](https://colab.research.google.com/drive/1wW3SjEoG6zPSsI7JI8TyY5uwYhVHvcLD?usp=sharing)
-- Figure 2: `plotstables/dataset_setup.ipynb`, `plotstables/dataset_setup.pdf` & [colab](https://colab.research.google.com/drive/1AqqoNduhgzOZs73geDlLBmmR8_q4frDf?usp=sharing)
-- Figure 3: `plotstables/contours.ipynb`, `plotstables/contours.pdf` & [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
-- Figure 4: `plotstables/isoflops_training.ipynb`, `plotstables/isoflops_training.pdf` & [colab](https://colab.research.google.com/drive/1i00FUdVp0Oj-Qw40ITLSGXwzuxpqBjmw?usp=sharing)
-- Figure 5: `plotstables/return.ipynb`, `plotstables/return.pdf` & [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
-- Figure 6 (Left): `plotstables/strategies.drawio` & `plotstables/strategies.pdf`
-- Figure 6 (Right): `plotstables/beyond.ipynb`, `plotstables/beyond.pdf` & [colab](https://colab.research.google.com/drive/1SqB-4WxFm0WXL7rGqfwXjakjIb1yy6EA?usp=sharing)
-- Figure 7: `plotstables/cartoon.pptx` & `plotstables/cartoon.pdf`
+- Figure 1: `plotstables/return_alloc.pdf`, `plotstables/return_alloc.ipynb`, [colab](https://colab.research.google.com/drive/1wW3SjEoG6zPSsI7JI8TyY5uwYhVHvcLD?usp=sharing)
+- Figure 2: `plotstables/dataset_setup.pdf`, `plotstables/dataset_setup.ipynb`, [colab](https://colab.research.google.com/drive/1AqqoNduhgzOZs73geDlLBmmR8_q4frDf?usp=sharing)
+- Figure 3: `plotstables/contours.pdf`, `plotstables/contours.ipynb`, [colab](https://colab.research.google.com/drive/17eH3k6-Nh4NNTsjAMecossCghbL8Xe47?usp=sharing)
+- Figure 4: `plotstables/isoflops_training.pdf`, `plotstables/isoflops_training.ipynb`, [colab](https://colab.research.google.com/drive/1i00FUdVp0Oj-Qw40ITLSGXwzuxpqBjmw?usp=sharing)
+- Figure 5: `plotstables/return.pdf`, `plotstables/return.ipynb`, [colab](https://colab.research.google.com/drive/11L5AC2noZqlixQWjvSjCvGB_WnOWyuv7?usp=sharing)
+- Figure 6 (Left): `plotstables/strategies.pdf`, `plotstables/strategies.drawio`
+- Figure 6 (Right): `plotstables/beyond.pdf`, `plotstables/beyond.ipynb`, [colab](https://colab.research.google.com/drive/1SqB-4WxFm0WXL7rGqfwXjakjIb1yy6EA?usp=sharing)
+- Figure 7: `plotstables/cartoon.pdf`, `plotstables/cartoon.pptx`
 - Figure 8: `plotstables/isoloss_400m1b5.pdf` & same colab as Figure 3
-- Figure 9 - 11: `plotstables/mup_dd_dd.ipynb`, `plotstables/mup.pdf`, `plotstables/dd.pdf`, `plotstables/dedup.pdf` & [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
+- Figure 9 - 11: `plotstables/mup.pdf`, `plotstables/dd.pdf`, `plotstables/dedup.pdf`, `plotstables/mup_dd_dd.ipynb`, [colab](https://colab.research.google.com/drive/1ghSdJMrGDaK_KM5vUgHYXkptS3sqKs8k?usp=sharing)
 - Figure 12: `plotstables/isoloss_alphabeta_100m.pdf` & same colab as Figure 3
-- Figure 13: `plotstables/galactica.ipynb`, `plotstables/galactica.pdf` & [colab](https://colab.research.google.com/drive/146lFaI6fhIdXaOAgtaqV4X3-rNGrH92C?usp=sharing)
+- Figure 13: `plotstables/galactica.pdf`, `plotstables/galactica.ipynb`, [colab](https://colab.research.google.com/drive/146lFaI6fhIdXaOAgtaqV4X3-rNGrH92C?usp=sharing)
 - Figure 14 - 17: `training_c4.pdf`, `validation_c4oscar.pdf`, `training_oscar.pdf`, `validation_epochs_c4oscar.pdf` & same colab as Figure 4
-- Figure 18: `plotstables/perplexity_histogram.ipynb` &  `plotstables/perplexity_histogram.pdf`
-- Figure 19 - 37: Manual
+- Figure 18: `plotstables/perplexity_histogram.pdf`, `plotstables/perplexity_histogram.ipynb`
+- Figure 19 - 20: `plotstabls/validation_c4py.pdf`, `plotstables/training_validation_filter.pdf`, `plotstables/beyond_losses.ipynb` & [colab](https://colab.research.google.com/drive/1bIJD0Gasv1GD1-27mrj6nURcQm6j-aEe?usp=sharing)
+- Figure 21 - 39: Manual
 
 ### Tables
 
-- Table 1: Manual
-- Table 2 - 7: `plotstables/repetition.ipynb` & [colab](https://colab.research.google.com/drive/19KW4ZiZ9iKzUY89A3IvRFzceGRpkyUK1?usp=sharing)
-- Table 8 - 9: `plotstables/python.ipynb` & [colab](https://colab.research.google.com/drive/1gFd83xDZ9JTTYkpaM2xCEgFcSKEpuTPH?usp=sharing)
-- Table 10: Manual
-- Table 11 - 12: `plotstables/filtering.ipynb` & [colab](https://colab.research.google.com/drive/1OKkrGBgRI8Uu_dq6RF8q_OIFGP-Saeah?usp=sharing)
-- Table 13: Manual
+- Table 1-2: Manual
+- Table 3 - 8: `plotstables/repetition.ipynb` & [colab](https://colab.research.google.com/drive/19KW4ZiZ9iKzUY89A3IvRFzceGRpkyUK1?usp=sharing)
+- Table 9 - 10: `plotstables/python.ipynb` & [colab](https://colab.research.google.com/drive/1gFd83xDZ9JTTYkpaM2xCEgFcSKEpuTPH?usp=sharing)
+- Table 11: Manual
+- Table 12 - 13: `plotstables/filtering.ipynb` & [colab](https://colab.research.google.com/drive/1OKkrGBgRI8Uu_dq6RF8q_OIFGP-Saeah?usp=sharing)
+- Table 14: Manual
 
 ## License
 
