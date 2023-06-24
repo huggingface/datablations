@@ -363,7 +363,7 @@ If you derive a closed-form expression for the optimal allocation instead of the
 ### Generative / Rouge
 
 1. Clone the `addtasks` branch of the evaluation harness: `git clone -b addtasks https://github.com/Muennighoff/lm-evaluation-harness.git`
-2. Setup an environment with `cd lm-evaluation-harness; pip install -e ".[dev]"; pip uninstall -y promptsource; pip install https://github.com/Muennighoff/promptsource.git@tr13` i.e. all requirements except promptsource, which is installed from a fork with the correct prompts
+2. Setup an environment with `cd lm-evaluation-harness; pip install -e ".[dev]"; pip uninstall -y promptsource; pip install git+https://github.com/Muennighoff/promptsource.git@tr13` i.e. all requirements except promptsource, which is installed from a fork with the correct prompts
 3. Make sure your checkpoint path is a transformers checkpoint path
 4. Run `sbatch utils/eval_generative.sh` modifying the necessary variables in the script first
 5. After running, we merge the generation files using `python utils/merge_generative.py` and then convert them to csv with `python utils/csv_generative.py merged.json`
