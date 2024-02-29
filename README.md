@@ -398,12 +398,12 @@ If you derive a closed-form expression for the optimal allocation instead of the
 
 ### Tables
 
-- Table 1-2: Manual
-- Table 3 - 8: `plotstables/repetition.ipynb` & [colab](https://colab.research.google.com/drive/19KW4ZiZ9iKzUY89A3IvRFzceGRpkyUK1?usp=sharing)
-- Table 9 - 10: `plotstables/python.ipynb` & [colab](https://colab.research.google.com/drive/1gFd83xDZ9JTTYkpaM2xCEgFcSKEpuTPH?usp=sharing)
-- Table 11: Manual
-- Table 12 - 13: `plotstables/filtering.ipynb` & [colab](https://colab.research.google.com/drive/1OKkrGBgRI8Uu_dq6RF8q_OIFGP-Saeah?usp=sharing)
-- Table 14: Manual
+- Table 1 - 3: Manual; The experiments for Table 1 are in `utils/parametric_fit.ipynb` equivalent to [this colab](https://colab.research.google.com/drive/1tYIfsmOMoz4dZ_JiVp998vZiMhRqSQrf?usp=sharing).
+- Table 4 - 9: `plotstables/repetition.ipynb` & [colab](https://colab.research.google.com/drive/19KW4ZiZ9iKzUY89A3IvRFzceGRpkyUK1?usp=sharing)
+- Table 10 - 11: `plotstables/python.ipynb` & [colab](https://colab.research.google.com/drive/1gFd83xDZ9JTTYkpaM2xCEgFcSKEpuTPH?usp=sharing)
+- Table 12: Manual
+- Table 13 - 14: `plotstables/filtering.ipynb` & [colab](https://colab.research.google.com/drive/1OKkrGBgRI8Uu_dq6RF8q_OIFGP-Saeah?usp=sharing)
+- Table 15: Manual
 
 ## License
 
