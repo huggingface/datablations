@@ -195,7 +195,7 @@ You can then tokenize the resulting jsonl files for training with Megatron as de
 
 All models can be downloaded at https://huggingface.co/datablations. 
 
-Models are generally named as follows: `lm1-{parameters}-{tokens}-{unique_tokens}`, specifically individual models in the folders are named as: `{parameters}{tokens}{unique_tokens}{optional specifier}`, for example `1b12b8100m` would be 1.1 billion params, 2.8 billion tokens, 100 million unique tokens. The `xby` (`1b1`, `2b8` etc.) convention introduces some ambiguity whether numbers belong to parameters or tokens, but you can always check the sbatch script in the respective folder to see the exact parameters / tokens / unique tokens.
+Models are generally named as follows: `lm1-{parameters}-{tokens}-{unique_tokens}`, specifically individual models in the folders are named as: `{parameters}{tokens}{unique_tokens}{optional specifier}`, for example `1b12b8100m` would be 1.1 billion params, 2.8 billion tokens, 100 million unique tokens. The `xby` (`1b1`, `2b8` etc.) convention introduces some ambiguity whether numbers belong to parameters or tokens, but you can always check the sbatch script in the respective folder to see the exact parameters / tokens / unique tokens. If you want to convert models that have not yet been converted to `huggingface/transformers`, you can follow the instructions in [Training](#regular-models).
 
 The easiest way to download a single model is e.g.:
 ```bash
