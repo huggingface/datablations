@@ -325,7 +325,7 @@ print(scaling_law(8.67e9, 178e9, 25e9)) # 2.2269634075087867
 
 Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases or to compare two models like in the example above. To compute the optimal allocation, you can use a simple grid search:
 
-```
+```python
 def chinchilla_optimal_N(C):
     a = (beta)/(alpha+beta)
     N_opt = G*(C/6)**a
