@@ -325,8 +325,21 @@ print(scaling_law(8.67e9, 178e9, 25e9)) # 2.2269634075087867
 
 Note that the actual loss value is unlikely to be useful, but rather the trend of the loss as e.g. the number of parameters increases or to compare two models like in the example above. To compute the optimal allocation, you can use a simple grid search:
 
-```python
-def optimal_allocation(N_BASE, D_BASE, U_BASE):
+```
+def chinchilla_optimal_N(C):
+    a = (beta)/(alpha+beta)
+    N_opt = G*(C/6)**a
+    return N_opt
+
+def chinchilla_optimal_D(C):
+    b = (alpha)/(alpha+beta)
+    D_opt = (1/G)*(C/6)**b
+    return D_opt
+
+def optimal_allocation(C, U_BASE):
+    """Compute optimal number of parameters and tokens to train for given a compute & unique data budget"""
+    N_BASE = chinchilla_optimal_N(C)
+    D_BASE = chinchilla_optimal_D(C)
     min_l = float("inf")
     for i in np.linspace(1.0001, 3, 500):
         D =  D_BASE*i
@@ -341,11 +354,11 @@ def optimal_allocation(N_BASE, D_BASE, U_BASE):
         new_l = scaling_law(N, D, U)
         if new_l < min_l:
             min_l, min_t, min_s = new_l, D, N
-     return min_l, min_t, min_s
+    return min_l, min_t, min_s
 
-_, min_t, min_s = optimal_allocation(8.67e9, 178e9, 25e9)
+_, min_t, min_s = optimal_allocation(10**22, 25e9)
 print(f"Optimal configuration: {min_t} tokens, {min_t/25e9} epochs, {min_s} parameters")
-# -> 227B tokens, 9.1 epochs, 6.8B parameters
+# -> 237336955477.55075 tokens, 9.49347821910203 epochs, 7022364735.879969 parameters
 # We went more extreme in Figure 1 to really put our prediction of "many epochs, fewer params" to the test
 ```
 
