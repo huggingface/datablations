@@ -2,10 +2,15 @@
 
 ![](plotstables/return_alloc.png)
 
-This repository provides an overview of all components from the paper [Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264).
+This repository provides an overview of all components from the paper [Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264). Talks on the paper:
+
+- [65min talk](https://www.youtube.com/watch?v=TK0-sitkCMw&t=2746s&pp=ygUoc2NhbGluZyBkYXRhLWNvbnN0cmFpbmVkIGxhbmd1YWdlIG1vZGVscw%3D%3D) by Niklas Muennighoff
+- [60min talk](https://www.youtube.com/watch?v=lLV-g-rGPhk&t=1s&pp=ygUoc2NhbGluZyBkYXRhLWNvbnN0cmFpbmVkIGxhbmd1YWdlIG1vZGVscw%3D%3D) by Niklas Muennighoff
+- [63min talk](https://www.youtube.com/watch?v=Kp5R6GZh8O0&pp=ygUoc2NhbGluZyBkYXRhLWNvbnN0cmFpbmVkIGxhbmd1YWdlIG1vZGVscw%3D%3D) by Alexander M. Rush
+- [25min talk](https://www.youtube.com/watch?v=FQk2YSgYLmU&pp=ygUoc2NhbGluZyBkYXRhLWNvbnN0cmFpbmVkIGxhbmd1YWdlIG1vZGVscw%3D%3D) by Alexander M. Rush
+- [60min slide deck](https://docs.google.com/presentation/d/1DvOytecCyqJyNnii8tVWCGUXHH4-hPqKJ5axxnNqxBQ/edit?usp=sharing&resourcekey=0-hr2Olxzz-mcMbAU7ytCZcw) used by Niklas Muennighoff
 
 We investigate scaling language models in data-constrained regimes. We run a large set of experiments varying the extent of data repetition and compute budget, ranging up to 900 billion training tokens and 9 billion parameter models. Based on our runs we propose and empirically validate a scaling law for compute optimality that accounts for the decreasing value of repeated tokens and excess parameters. We also experiment with approaches mitigating data scarcity, including augmenting the training dataset with code data, perplexity-filtering and deduplication. Models and datasets from our 400 training runs are available via this repository.
-
 
 <!-- TOC -->
 
